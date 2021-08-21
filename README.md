@@ -7,7 +7,7 @@ and disciplined developers.  As a result, it abounds in code that implements
 ingenious algorithms with low quality code, documentation, and build systems.
 
 This makes the programs less accessible and less reliable, impeding critical
-research as researcher struggle to install, learn, and use them.  A
+research as researchers struggle to install, learn, and use them.  A
 core goal of all my projects is software that is easy to install on any
 POSIX platform, well-documented, easy to use, reliable, and performant.
 
