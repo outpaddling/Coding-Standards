@@ -1,11 +1,15 @@
 # Coding-Standards
-Description and examples of coding standards for all projects
 
 One of my aims as a bioinformatician is to raise the average quality of
 code in the field.  Bioinformatics, and scientific computing in general,
 has no shortage of brilliant minds, but a severe shortage of experienced
 and disciplined developers.  As a result, it abounds in code that implements
-ingenious algorithms with low quality code and build systems.
+ingenious algorithms with low quality code, documentation, and build systems.
+
+This makes the programs less accessible and less reliable, impeding critical
+research as researcher struggle to install, learn, and use them.  A
+core goal of all my projects is software that is easy to install on any
+POSIX platform, well-documented, easy to use, reliable, and performant.
 
 This repository describes the coding standards for all projects under
 Github accounts "outpaddling" and "auerlab".  All contributions to these
@@ -16,7 +20,9 @@ are incorporated.
 ## Modularity
 
 1. Any function that might be useful to another program should be placed
-in a library such as libxtend or biolibc, rather than the application.  For
+in a library such as
+[libxtend](https://github.com/outpaddling/libxtend) or
+[biolibc](https://github.com/outpaddling/biolibc), rather than the application.  For
 a typical C project, about 2/3 to 3/4 of all the code I write ends up in
 libraries.
 
@@ -39,7 +45,7 @@ O(N*log N) algorithms where N is guaranteed to be small.
 
 2. Use a fully compiled language for any potentially long-running code.
 Interpreted languages are at least 2 orders of magnitude slower for the
-same algoorithm.  Just-in-time compiled languages like Java and Numba do
+same algorithm.  Just-in-time compiled languages like Java and Numba do
 much better, but still fall far short of C, C++, and Fortran while also
 using far more memory.
 
@@ -150,4 +156,7 @@ Makefile.
 3. Make the build-system package-friendly.  If it's trivial to create a
 Debian package, a FreeBSD port, a MacPort, a pkgsrc packages, etc., then
 you can stay out of the software deployment business and focus on
-development.
+development.  This can be achieved simply with a clean Makefile that
+respects standard build variables such as CC, CFLAGS, LDFLAGS, etc., which
+most package managers already provide as environment variables or via the
+make command.
