@@ -186,3 +186,44 @@ development.  This can be achieved very simply with a clean Makefile that
 respects standard build variables such as CC, CFLAGS, LDFLAGS, etc., which
 most package managers already provide as environment variables or via the
 make command.
+
+## OOP in C
+
+Object oriented design is a good practice and important for keeping complex
+programs maintainable.  Unfortunately, languages with object-oriented
+support tend to be either overly complex, or interpreted which leads to
+poor performance.
+
+Fortunately, it is possible to easily implement a basic object-oriented design
+in any language with structures and typedefs, such as C.  C is a simple
+language that any scientist can master and provides the best general
+performance of any programming language if used properly.
+
+A web search for OOP in C will reveal lots of advice on this subject.
+
+1. Treat C structures like C++ or Java classes.  This is easy to achieve
+following a few simple practices:
+
+    1. A C function should only directly access the members of one
+    structure type.  Use accessors and mutators for all other structure
+    types.  This makes it a member of that class an no others.
+    
+    2. Prefix function names with a tag representing the class name.
+    This is an effective substitute for name spaces, e.g.
+    ```myclass::function(args)``` in C++ can be
+    ```myclass_function(args)``` in C.
+    
+    3. Realize that the object name before the '.' in C++ or Java is
+    really a pointer arguments.  Hence, ```object.function(x,y);``` in
+    C++ or Java is the same as ```function(&object,x,y);``` in C.
+    OOP is about high-level program organization, not the arrangement
+    of language tokens.
+
+2. Organize your classes into separate source files as you would in C++
+or Java.  I.e., create one header file per structure type and one or more
+source files to contain the function (method) definitions.
+
+3. Create accessor and mutator functions or macros for all structure
+members.  C has no "private" modifier to protect them from direct access
+from non-member functions, so it's up to the programmer to respect class
+boundaries.
