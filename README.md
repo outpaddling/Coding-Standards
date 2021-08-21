@@ -214,7 +214,7 @@ following a few simple practices:
     ```myclass_function(args)``` in C.
     
     3. Realize that the object name before the '.' in C++ or Java is
-    really a pointer arguments.  Hence, ```object.function(x,y);``` in
+    really a pointer argument.  Hence, ```object.function(x,y);``` in
     C++ or Java is the same as ```function(&object,x,y);``` in C.
     OOP is about high-level program organization, not the arrangement
     of language tokens.
