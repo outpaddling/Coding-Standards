@@ -32,10 +32,12 @@ are unavoidable is interrupt service routines (ISRs).  They have no place
 in application programming.  There are other constructs available in modern
 languages that make modular programming convenient and efficient.
 
-3. Write cohesive code, i.e. keep related code together.
-Each function should serve one purpose and
-each purpose should be served by one function.  Initialize loop variables
-in or immediately before the loop, not pages earlier.
+3. Write cohesive code, i.e. keep related code together. Each subprogram
+should serve exactly one purpose and each purpose should be served by
+exactly one subprogram.  Initialize loop variables
+in or immediately before the loop, not pages earlier.  The reader should
+not have to jump around the program to find all the pieces needed to
+understand one of the functions it performs.
 
 ## Performance
 
@@ -75,27 +77,44 @@ and limits the size of arrays it can process.
 
 All code should run on any POSIX platform and any CPU architecture.
 
-1. Write endian-independent code (e.g. use bit operations and masks instead
-of bit fields: TODO: sample code).
+1. Write endian-independent code
+
+    1. Use bit operations and masks instead of bit fields.  See
+    https://github.com/outpaddling/Coding-Standards/endian.c.
+    
+    2. If saving numeric data in binary format, use something like the
+    C bswap() functions in endian.h as needed.
+    
+    ```
+    #include <endian.h>
+    
+    #if BYTE_ORDER == BIG_ENDIAN
+	bswap(num)
+    #endif
+    ```
 
 2. Avoid *nixisms: Look for a portable implementation rather than lace
 the code with #ifdefs for specific platforms.
 
 3. If there is a good reason to write platform-dependent code (e.g. to
 double program speed by using AVX instructions), keep a portable
-implementation alongside the x86-optimized code.
+implementation alongside the x86-optimized code.  A suboptimal version
+for Power, ARM, and RISC-V is better than nothing.
 
 4. Before writing platform-specific code, first see of the compiler's optimizer
 can optimize portable code.  Modern compilers can generate SSE, AVX, Altivec,
 etc. instructions automatically using portable compiler flags like
-```-march-native```.
+```-march-native```.  In some cases this may produce better results than
+hand-written assembly language.
 
 ## Simplicity
 
-1. The simplest solution is the easiest to maintain and usually the fastest.
+1. The simplest solution is always the easiest to maintain and usually the
+fastest.  Doubling man-hours for a 10% gain in speed is usually a waste.
 
 2. Minimize complexity, not lines of code.  Writing cryptic, overly clever
-code makes matters worse, not better.
+code to make it more compact is just showing off and makes matters worse,
+not better.  Readability is as important as any other trait.
 
 ## Documentation
 
@@ -107,11 +126,11 @@ source files for examples.
 to describe in the man page format:
 
     1. Consider whether the application is too big and should be broken
-    into separate programs.
+    into separate, more cohesive programs.
     
     2. If it really must be so complex, write a simple man page providing
-    an overview and in it provide a link to the full manual in a more
-    appropriate format.
+    an overview, and in it tell the reader where to find the full manual in
+    a more appropriate format.
 
 3. Use highly descriptive variable and constant names to reduce the need
 for comments.
@@ -130,7 +149,17 @@ way.
 
 Write a simple build system that's easy to follow and portable.
 
-1. Do not bundle dependencies.  The build system should build your program
+1. A simple Makefile that respects standard build variables such as CC,
+CXX, CFLAGS, CXXFLAGS, LDFLAGS, etc. is sufficient for most projects and
+easier to debug than more sophisticated build systems.
+Configure tools like GNU autoconf and cmake may seem to make things easier,
+but they are cans of worms.  Most of them end up becoming extremely complex
+in the attempt to make them work on multiple platforms and almost invariably
+fail to achieve this goal.  When they don't work (which is often)
+it's a nightmare for the end user.  They'd have an easier time with a simple
+Makefile.
+
+2. Do not bundle dependencies.  The build system should build your program
 and nothing else.  This is not only a good idea, it's policy for many
 mainstream package managers:
 
@@ -143,20 +172,15 @@ https://wiki.gentoo.org/wiki/Why_not_bundle_dependencies
 https://docs.freebsd.org/en/books/porters-handbook/special/#bundled-libs
 
 Instead, write software that works with the mainstream versions of all
-dependencies, which are installed separately.
-
-2. A simple Makefile that respects standard build variables such as CC,
-CXX, CFLAGS, CXXFLAGS, LDFLAGS, etc. is enough for most projects.
-Configure tools like GNU autoconf and cmake may seem to make things easier,
-but they are cans of worms.  Most of them end up becoming extremely complex
-in the attempt to make them work on multiple platforms, and when they don't,
-it's a nightmare for the end user.  They'd have an easier time with a simple
-Makefile.
+dependencies, which are installed separately.  It's easier to maintain
+compatibility with mainstream libraries than to maintain your own bundled
+fork of each of them.
 
 3. Make the build-system package-friendly.  If it's trivial to create a
 Debian package, a FreeBSD port, a MacPort, a pkgsrc packages, etc., then
-you can stay out of the software deployment business and focus on
-development.  This can be achieved simply with a clean Makefile that
+you'll more likely get free help from packager maintainers, so you can stay
+out of the software management business and focus on
+development.  This can be achieved very simply with a clean Makefile that
 respects standard build variables such as CC, CFLAGS, LDFLAGS, etc., which
 most package managers already provide as environment variables or via the
 make command.
