@@ -80,7 +80,7 @@ All code should run on any POSIX platform and any CPU architecture.
 1. Write endian-independent code
 
     1. Use bit operations and masks instead of bit fields.  See
-    https://github.com/outpaddling/Coding-Standards/endian.c.
+    https://github.com/outpaddling/Coding-Standards/blob/main/endian.c.
     
     2. If saving numeric data in binary format, use something like the
     C bswap() functions in endian.h as needed.
