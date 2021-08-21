@@ -157,7 +157,7 @@ CXX, CFLAGS, CXXFLAGS, LDFLAGS, etc. is sufficient for most projects and
 easier to debug than more sophisticated build systems.
 Configure tools like GNU autoconf and cmake may seem to make things easier,
 but they are cans of worms.  Most of them end up becoming extremely complex
-in the attempt to make them work on multiple platforms and almost invariably
+in the attempt to make them work on all platforms and almost invariably
 fail to achieve this goal.  When they don't work (which is often)
 it's a nightmare for the end user.  They'd have an easier time with a simple
 Makefile.
