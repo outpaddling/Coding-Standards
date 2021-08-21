@@ -39,40 +39,6 @@ in or immediately before the loop, not pages earlier.  The reader should
 not have to jump around the program to find all the pieces needed to
 understand one of the functions it performs.
 
-## Performance
-
-1. Use the most efficient available algorithm for the purpose.  This
-may mean using a simple O(N^2) algorithm rather than a more complex
-O(N*log N) algorithms where N is guaranteed to be small.
-
-2. Use a fully compiled language for any potentially long-running code.
-Interpreted languages are at least 2 orders of magnitude slower for the
-same algorithm.  Just-in-time compiled languages like Java and Numba do
-much better, but still fall far short of C, C++, and Fortran while also
-using far more memory.
-
-https://acadix.biz/RCUG/HTML/ch15s04.html#compiled-interpreted
-
-3. Don't use loops (including hidden loops like string, vector, or matrix
-copying if the language supports them).  There is often an approach that
-uses scalar operations instead.
-
-4. If you must use loops:
-
-    1. Move as much code as possible out of the loop
-    2. Minimize the number of iterations
-
-## Resource use
-
-1. Always try to minimize memory use.  Using more memory rarely speeds up
-a program and more often slows it down.  Programs that use less memory have
-a better cache hit ratio and hence far fewer memory wait cycles.  Occasionally
-it is advantageous to bring large amounts of data into memory, but work hard
-to avoid this strategy.  As an example, adding two matrices stored in files
-and saving the result to another file does not require the use of arrays.
-(Think about it.)  Using arrays for this task only slows down the program
-and limits the size of arrays it can process.
-
 ## Portability
 
 All code should run on any POSIX platform and any CPU architecture.
@@ -115,6 +81,41 @@ fastest.  Doubling man-hours for a 10% gain in speed is usually a waste.
 2. Minimize complexity, not lines of code.  Writing cryptic, overly clever
 code to make it more compact is just showing off and makes matters worse,
 not better.  Readability is as important as any other trait.
+
+## Performance
+
+1. Use the most efficient available algorithm for the purpose.  This
+may mean using a simple O(N^2) algorithm rather than a more complex
+O(N*log N) algorithms where N is guaranteed to be small.
+
+2. Use a fully compiled language for any potentially long-running code.
+Interpreted languages are at least 2 orders of magnitude slower for the
+same algorithm.  Just-in-time compiled languages like Java and Numba do
+much better, but still fall far short of C, C++, and Fortran while also
+using far more memory.
+
+https://acadix.biz/RCUG/HTML/ch15s04.html#compiled-interpreted
+
+3. Don't use loops (including hidden loops like string, vector, or matrix
+copying if the language supports them) if they can be avoided.  There is
+often an approach that uses scalar operations instead.
+
+4. If you must use loops:
+
+    1. Move as much code as possible out of the loop
+    2. Minimize the number of iterations
+
+## Memory use
+
+Always try to minimize memory use.  Using more memory rarely speeds up
+a program and more often slows it down.  Programs that use less memory have
+a better cache hit ratio and hence far fewer memory wait cycles.  Occasionally
+it is advantageous to bring large amounts of data into memory (e.g. sorting,
+hash tables), but work hard to find alternatives.  As an example, adding two
+matrices stored in files
+and saving the result to another file does not require the use of arrays.
+(Think about it.)  Using arrays for this task only slows down the program
+and limits the size of arrays it can process.
 
 ## Documentation
 
@@ -161,7 +162,7 @@ fail to achieve this goal.  When they don't work (which is often)
 it's a nightmare for the end user.  They'd have an easier time with a simple
 Makefile.
 
-2. Do not bundle dependencies.  The build system should build your program
+2. Do not bundle dependencies.  The build system should build this project
 and nothing else.  This is not only a good idea, it's policy for many
 mainstream package managers:
 
@@ -175,12 +176,12 @@ https://docs.freebsd.org/en/books/porters-handbook/special/#bundled-libs
 
 Instead, write software that works with the mainstream versions of all
 dependencies, which are installed separately.  It's easier to maintain
-compatibility with mainstream libraries than to maintain your own bundled
+compatibility with mainstream libraries than to maintain a bundled
 fork of each of them.
 
 3. Make the build-system package-friendly.  If it's trivial to create a
 Debian package, a FreeBSD port, a MacPort, a pkgsrc packages, etc., then
-you'll more likely get free help from packager maintainers, so you can stay
+we'll more likely get free help from packager maintainers, so we can stay
 out of the software management business and focus on
 development.  This can be achieved very simply with a clean Makefile that
 respects standard build variables such as CC, CFLAGS, LDFLAGS, etc., which
@@ -219,7 +220,7 @@ following a few simple practices:
     OOP is about high-level program organization, not the arrangement
     of language tokens.
 
-2. Organize your classes into separate source files as you would in C++
+2. Organize classes into separate source files as you would in C++
 or Java.  I.e., create one header file per structure type and one or more
 source files to contain the function (method) definitions.
 
