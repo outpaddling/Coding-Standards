@@ -216,8 +216,8 @@ following a few simple practices:
     
     3. Realize that the object name before the '.' in C++ or Java is
     really a pointer argument, references as ```this->``` inside the
-    function.  Hence, ```object.function(x,y);``` in
-    C++ or Java is the same as ```function(&object,x,y);``` in C.
+    function.  Hence, ```object.function(x,y);``` in C++ or Java is roughly
+    equivalent to ```function(&object,x,y);``` in C.
     OOP is about high-level program organization, not the arrangement
     of language tokens.
 
@@ -226,6 +226,6 @@ or Java.  I.e., create one header file per structure type and one or more
 source files to contain the function (method) definitions.
 
 3. Create accessor and mutator functions or macros for all structure
-members.  C has no "private" modifier to protect them from direct access
-from non-member functions, so it's up to the programmer to respect class
-boundaries.
+members.  That said, we must keep in mind that C has no "private" modifier
+to protect them from direct access by non-member functions, so it's up to
+the programmer to respect class boundaries.
