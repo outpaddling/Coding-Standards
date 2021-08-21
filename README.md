@@ -97,11 +97,15 @@ way.
 Write a simple build system that's easy to follow and portable.
 
 1. Do not bundle dependencies.  The build system should build your program
-and nothing else.
+and nothing else.  This is not only a good idea, it's policy for many
+mainstream package managers:
 
 https://fedoraproject.org/wiki/Bundled_Libraries?rd=Packaging:Bundled_Libraries
+
 https://www.debian.org/doc/debian-policy/ch-source.html#s-embeddedfiles
+
 https://wiki.gentoo.org/wiki/Why_not_bundle_dependencies
+
 https://docs.freebsd.org/en/books/porters-handbook/special/#bundled-libs
 
 Instead, write software that works with the mainstream versions of all
