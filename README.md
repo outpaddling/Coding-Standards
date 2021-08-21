@@ -119,7 +119,9 @@ not better.  Readability is as important as any other trait.
 ## Documentation
 
 1. Every library function has a man page.  These can be generated from block
-comments by the c2man and script2man scripts.  See libxtend and biolibc
+comments by the c2man and script2man scripts.  See 
+[libxtend](https://github.com/outpaddling/libxtend) and
+[biolibc](https://github.com/outpaddling/biolibc)
 source files for examples.
 
 2. Every application has a man page.  If the application is too complicated
