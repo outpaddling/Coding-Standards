@@ -7,7 +7,7 @@ has no shortage of brilliant minds, but a severe shortage of experienced
 and disciplined developers.  As a result, it abounds in code that implements
 ingenious algorithms with low quality code and build systems.
 
-The repository describes the coding standards for all projects under
+This repository describes the coding standards for all projects under
 Github accounts "outpaddling" and "auerlab".  All contributions to these
 projects should follow these guidelines to the extent possible.  Patches
 and merge requests that fall short will need to be cleaned up before they
@@ -16,7 +16,9 @@ are incorporated.
 ## Modularity
 
 1. Any function that might be useful to another program should be placed
-in a library such as libxtend or biolibc, rather than the application.
+in a library such as libxtend or biolibc, rather than the application.  For
+a typical C project, about 2/3 to 3/4 of all the code I write ends up in
+libraries.
 
 2. Absolutely no global variables unless there is no alternative.  In my
 decades of programming, the only place I've encountered where global variables
@@ -31,12 +33,26 @@ in or immediately before the loop, not pages earlier.
 
 ## Performance
 
-1. Use the most efficient available algorithm
+1. Use the most efficient available algorithm for the purpose.  This
+may mean using a simple O(N^2) algorithm rather than a more complex
+O(N*log N) algorithms where N is guaranteed to be small.
 
 2. Use a fully compiled language for any potentially long-running code.
+Interpreted languages are at least 2 orders of magnitude slower for the
+same algoorithm.  Just-in-time compiled languages like Java and Numba do
+much better, but still fall far short of C, C++, and Fortran while also
+using far more memory.
+
+https://acadix.biz/RCUG/HTML/ch15s04.html#compiled-interpreted
 
 3. Don't use loops (including hidden loops like string, vector, or matrix
-copying if the language supports them).
+copying if the language supports them).  There is often an approach that
+uses scalar operations instead.
+
+4. If you must use loops:
+
+    1. Move as much code as possible out of the loop
+    2. Minimize the number of iterations
 
 ## Resource use
 
@@ -44,17 +60,29 @@ copying if the language supports them).
 a program and more often slows it down.  Programs that use less memory have
 a better cache hit ratio and hence far fewer memory wait cycles.  Occasionally
 it is advantageous to bring large amounts of data into memory, but work hard
-to avoid this strategy.
+to avoid this strategy.  As an example, adding two matrices stored in files
+and saving the result to another file does not require the use of arrays.
+(Think about it.)  Using arrays for this task only slows down the program
+and limits the size of arrays it can process.
 
 ## Portability
 
 All code should run on any POSIX platform and any CPU architecture.
 
 1. Write endian-independent code (e.g. use bit operations and masks instead
-of bit fields: TODO: sample code)
+of bit fields: TODO: sample code).
 
 2. Avoid *nixisms: Look for a portable implementation rather than lace
 the code with #ifdefs for specific platforms.
+
+3. If there is a good reason to write platform-dependent code (e.g. to
+double program speed by using AVX instructions), keep a portable
+implementation alongside the x86-optimized code.
+
+4. Before writing platform-specific code, first see of the compiler's optimizer
+can optimize portable code.  Modern compilers can generate SSE, AVX, Altivec,
+etc. instructions automatically using portable compiler flags like
+```-march-native```.
 
 ## Simplicity
 
