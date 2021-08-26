@@ -82,6 +82,37 @@ fastest.  Doubling man-hours for a 10% gain in speed is usually a waste.
 code to make it more compact is just showing off and makes matters worse,
 not better.  Readability is as important as any other trait.
 
+## Readability
+
+1. All code is consistently indented with blank lines separating code blocks.
+
+2. All variable names must be descriptive and unambiguous.  Do not use
+abbreviations that cloud the meaning of the variable.  Highly descriptive
+variable names make the code self-documenting, reducing the need for
+comments.
+
+```
+    int     count;          // Ambiguous
+    int     record_count;   // Better
+```
+
+3. Comments should be brief and not cluttered with useless language.
+
+```
+    int     record_count;   // Integer variable to count records (useless)
+    int     record_count;   // Total records processed (helpful)
+```
+
+4. Comments should never state WHAT a piece of code is doing.  This insults
+the reader's intelligence and wastes space.  Explain WHY the code is doing
+what it does, i.e. how it serves the purpose and why you chose to do it this
+way.
+
+```
+    buff_size *= 2;     // Double buff_size (a useless comment)
+    buff_size *= 2;     // Avoid having to realloc too frequently (useful)
+```
+
 ## Performance
 
 1. Use the most efficient available algorithm for the purpose.  This
@@ -134,19 +165,6 @@ to describe in the man page format:
     2. If it really must be so complex, write a simple man page providing
     an overview, and in it tell the reader where to find the full manual in
     a more appropriate format.
-
-3. Use highly descriptive variable and constant names to reduce the need
-for comments.
-
-4. Comments should never state WHAT a piece of code is doing.  This insults
-the reader's intelligence and wastes space.  Explain WHY the code is doing
-what it does, i.e. how it serves the purpose and why you chose to do it this
-way.
-
-```
-    buff_size *= 2;    // Double buff_size (a useless comment)
-    buff_size *= 2;    // Avoid having to realloc too frequently (useful)
-```
 
 ## Build system
 
