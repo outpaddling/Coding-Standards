@@ -9,13 +9,14 @@ ingenious algorithms with low quality code, documentation, and build systems.
 This makes the programs less accessible and less reliable, impeding critical
 research as researchers struggle to install, learn, and use them.  A
 core goal of all my projects is software that is easy to install on any
-POSIX platform, well-documented, easy to use, reliable, and performant.
+POSIX platform, well-documented, easy to use, reliable, and highly CPU
+and memory efficient.
 
 This repository describes the coding standards for all projects under
 Github accounts "outpaddling" and "auerlab".  All contributions to these
-projects should follow these guidelines to the extent possible.  Patches
-and merge requests that fall short will need to be cleaned up before they
-are incorporated.
+projects should follow these guidelines to the maximum extent possible.
+Patches and merge requests that fall short will need to be cleaned up before
+they are incorporated.
 
 ## Modularity
 
