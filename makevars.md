@@ -55,6 +55,10 @@ MKDIR       ?= mkdir
 # Command for stripping binaries
 STRIP       ?= strip
 
+# For building static libraries
+AR          ?= ar
+RANLIB      ?= ranlib
+
 # Directories
 
 # Parent directory for all installed files.  May also be "prefix", e.g. in
@@ -78,9 +82,4 @@ LOCALBASE   ?= /usr/local
 # Where to install man pages
 MANPREFIX   ?= ${PREFIX}
 MANDIR      ?= ${MANPREFIX}/man
-
-# For building static libraries
-AR          ?= ar
-RANLIB      ?= ranlib
-
 ```
