@@ -196,7 +196,7 @@ for detailed info on standard/common variables.
 
 Configure tools like GNU autoconf and cmake may seem to make things easier,
 but they are cans of worms.  Most of them end up becoming extremely complex
-in the attempt to make them work on all platforms and almost invariably
+in the attempt to make them work in various environments and almost invariably
 fail to achieve this goal.  When they don't work (which is often)
 it's a nightmare for the end user.  They'd have an easier time with a simple
 Makefile.
@@ -309,7 +309,7 @@ following a few simple practices:
 
     1. A C function should only directly access the members of one
     structure type.  Use accessors and mutators for all other structure
-    types.  This makes it a member of that class an no others.
+    types.  This makes it a member of that class and no others.
     
     2. Prefix function names with a tag representing the class name.
     This is an effective substitute for name spaces, e.g.
@@ -317,8 +317,8 @@ following a few simple practices:
     ```myclass_function(args)``` in C.
     
     3. Realize that the object name before the '.' in C++ or Java is
-    really a pointer argument, references as ```this->``` inside the
-    function.  Hence, ```object.function(x,y);``` in C++ or Java is roughly
+    really just a pointer argument, referenced as ```this->``` inside the
+    function.  Hence, ```object.function(x,y);``` in C++ or Java is basically
     equivalent to ```function(&object,x,y);``` in C.
     OOP is about high-level program organization, not the arrangement
     of language tokens.
@@ -330,4 +330,5 @@ source files to contain the function (method) definitions.
 3. Create accessor and mutator functions or macros for all structure
 members.  That said, we must keep in mind that C has no "private" modifier
 to protect them from direct access by non-member functions, so it's up to
-the programmer to respect class boundaries.
+the programmer to respect class boundaries.  The gen-get-set script can do
+most of the work here.
