@@ -38,7 +38,7 @@ should serve exactly one purpose and each purpose should be served by
 exactly one subprogram.  Initialize loop variables
 in or immediately before the loop, not pages earlier.  The reader should
 not have to jump around the program to find all the pieces needed to
-understand one of the functions it performs.
+understand a code block.
 
 ## Portability
 
@@ -60,28 +60,44 @@ All code should run on any POSIX platform and any CPU architecture.
     #endif
     ```
 
-2. Avoid *nixisms: Look for a portable implementation rather than lace
-the code with #ifdefs for specific platforms.
+2. Avoid *nixisms: Look for portable implementations rather than lace
+the code with #ifdefs for specific platforms.  The first solution you
+come up with when coding on BSD, Linux, or Mac may not be portable.  Don't
+get attached to it.  If it doesn't work on other platforms, look for a more
+portable solution before adding #ifdefs to your code.  Then you'll have a
+permanent solution rather than more work down the road to support other new
+platforms.
 
 3. If there is a good reason to write platform-dependent code (e.g. to
 double program speed by using AVX instructions), keep a portable
-implementation alongside the x86-optimized code.  A suboptimal version
+implementation alongside the x86-optimized code.  A suboptimal solution
 for Power, ARM, and RISC-V is better than nothing.
 
-4. Before writing platform-specific code, first see of the compiler's optimizer
+4. Before writing platform-specific code for speed, first see of the
+compiler's optimizer
 can optimize portable code.  Modern compilers can generate SSE, AVX, Altivec,
 etc. instructions automatically using portable compiler flags like
 ```-march-native```.  In some cases this may produce better results than
 hand-written assembly language.
 
+## Testing
+
+1. Test new code frequently.  Do not write more than a few dozen lines of
+code without fully testing the changes.  This way if there is a bug,
+you'll be able to find it easily.
+
+2. Prepare a test script and simple test data for each library and executable
+as soon as it has functionality to test, so that it will be easy to test
+frequently.
+
 ## Simplicity
 
 1. The simplest solution is always the easiest to maintain and usually the
-fastest.  Doubling man-hours for a 10% gain in speed is usually a waste.
+fastest.  Complicating the code for a 10% gain in speed is usually a waste.
 
 2. Minimize complexity, not lines of code.  Writing cryptic, overly clever
-code to make it more compact is just showing off and makes matters worse,
-not better.  Readability is as important as any other trait.
+code to make it more compact is just showing off, and makes maintenance harder,
+not easier.  Readability is as important as any other trait.
 
 ## Readability
 
@@ -101,27 +117,27 @@ comments.
 
 ```
     int     record_count;   // Integer variable to count records (useless)
-    int     record_count;   // Total records processed (helpful)
+    int     record_count;   // Total records processed so far (helpful)
 ```
 
-4. Comments should never state WHAT a piece of code is doing.  This insults
-the reader's intelligence and wastes space.  Explain WHY the code is doing
-what it does, i.e. how it serves the purpose and why you chose to do it this
-way.
+4. Comments should never state WHAT a piece of code is doing.  This only
+insults the reader's intelligence and doesn't help.  Explain WHY the code is
+doing what it does, i.e. how it serves the purpose and why you chose to do
+it this way.
 
 ```
-    buff_size *= 2;     // Double buff_size (a useless comment)
+    buff_size *= 2;     // Double buff_size (useless)
     buff_size *= 2;     // Avoid having to realloc too frequently (useful)
 ```
 
 ## Performance
 
-1. Use the most efficient available algorithm for the purpose.  This
+1. Use the most efficient available algorithm *for the purpose*.  This
 may mean using a simple O(N^2) algorithm rather than a more complex
 O(N*log N) algorithms where N is guaranteed to be small.
 
-2. Use a fully compiled language for any potentially long-running code.
-Interpreted languages are at least 2 orders of magnitude slower for the
+2. Use a fully compiled language where performance is important.
+Interpreted languages are orders of magnitude slower for the
 same algorithm.  Just-in-time compiled languages like Java and Numba do
 much better, but still fall far short of C, C++, and Fortran while also
 using far more memory.
@@ -139,7 +155,7 @@ often an approach that uses scalar operations instead.
 
 ## Memory use
 
-Always try to minimize memory use.  Using more memory rarely speeds up
+*Always* try to minimize memory use.  Using more memory rarely speeds up
 a program and more often slows it down.  Programs that use less memory have
 a better cache hit ratio and hence far fewer memory wait cycles.  Occasionally
 it is advantageous to bring large amounts of data into memory (e.g. sorting,
@@ -157,23 +173,27 @@ comments by the c2man and script2man scripts.  See
 [biolibc](https://github.com/outpaddling/biolibc)
 source files for examples.
 
-2. Every application has a man page.  If the application is too complicated
+2. Every executable has a man page.  If the application is too complicated
 to describe in the man page format:
 
     1. Consider whether the application is too big and should be broken
     into separate, more cohesive programs.
     
     2. If it really must be so complex, write a simple man page providing
-    an overview, and in it tell the reader where to find the full manual in
-    a more appropriate format.
+    an overview of its purpose, and in it tell the reader where to find the
+    full manual in a more appropriate format.  Don't make users waste time
+    searching for documentation.
 
 ## Build system
 
 Write a simple build system that's easy to follow and portable.
 
 1. A simple Makefile that respects standard build variables such as CC,
-CXX, CFLAGS, CXXFLAGS, LDFLAGS, etc. is sufficient for most projects and
-easier to debug than more sophisticated build systems.
+CXX, CFLAGS, CXXFLAGS, LDFLAGS, INSTALL, etc. is sufficient for most projects
+and easier to debug than more sophisticated build systems.  See
+https://github.com/outpaddling/Coding-Standards/blob/main/makevars.md
+for detailed info on standard/common variables.
+
 Configure tools like GNU autoconf and cmake may seem to make things easier,
 but they are cans of worms.  Most of them end up becoming extremely complex
 in the attempt to make them work on all platforms and almost invariably
@@ -181,7 +201,70 @@ fail to achieve this goal.  When they don't work (which is often)
 it's a nightmare for the end user.  They'd have an easier time with a simple
 Makefile.
 
-2. Do not bundle dependencies.  The build system should build this project
+Respecting these variables means two things:
+
+Use them.  E.g. use CC, not CCOMPILER, in your make rules.
+
+Allow them to be overridden by environment variables or make arguments.
+This can be achieved by assigning with ?= rather than = or :=.  ?= sets
+a variable only if it was not already set in the environment or by
+a make argument.  If a value is actually required, it can be added
+using +=.  Suppose we have a program that must be compiled with the
+C macro POSIX defined:
+
+```
+# Does not respect environment or make arguments and compiles with
+# gcc -march=native -O4.  This will not work where gcc is not installed.
+# If it does, it results in non-portable executables that will not run
+# on a lesser CPU because the compiler generates machine code for the
+# CPU where it is compiled.
+CC      = gcc
+CFLAGS  = -march=native -O4 -DPOSIX
+
+prog:   prog.c
+	${CC} ${CFLAGS} prog.c -o prog
+```
+
+```
+# Respects environment and make arguments
+CC      ?= gcc                  # Use gcc only if CC is not specified
+CFLAGS  ?= -march=native -O4    # Use only if CFLAGS not specified
+CFLAGS  += -DPOSIX              # Append to CFLAGS in all cases
+
+prog:   prog.c
+	${CC} ${CFLAGS} prog.c -o prog
+```
+
+Now suppose we compile as follows:
+
+```
+make CC=cc CFLAGS="-O2 -pipe -Wall"
+
+```
+or
+```
+env CC=cc CFLAGS="-O2 -pipe -Wall" make
+```
+With the first makefile, we may see
+```
+gcc -march=native -O4 prog.c -o prog
+```
+Some make programs allow make arguments like CC=cc to override assignments
+like CC=gcc in the makefile, but others do not.
+
+With the second makefile, we will always see
+```
+cc -O2 -pipe -Wall prog.c -o prog
+```
+
+2. Use portable commands.  E.g., there is generally no reason to set
+CC to "gcc", since "cc" and "gcc" are the same on GNU-based systems such
+as Linux and "cc" is "clang" on FreeBSD and MacOS.  Setting CC to "cc"
+will likely use the compiler that the user wants in most cases.  If they
+really want "gcc" instead of the native compiler, they can easily specify
+that by running "make CC=gcc".
+
+3. Do not bundle dependencies.  The build system should build this project
 and nothing else.  This is not only a good idea, it's policy for many
 mainstream package managers:
 
