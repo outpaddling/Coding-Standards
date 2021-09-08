@@ -168,7 +168,11 @@ and limits the size of arrays it can process.
 ## Documentation
 
 1. Every library function has a man page.  These can be generated from block
-comments by the c2man and script2man scripts.  See 
+comments by the 
+[auto-c2man](https://github.com/outpaddling/auto-dev/tree/main/Scripts)
+and 
+[auto-script2man](https://github.com/outpaddling/auto-dev/tree/main/Scripts)
+scripts.  See 
 [libxtend](https://github.com/outpaddling/libxtend) and
 [biolibc](https://github.com/outpaddling/biolibc)
 source files for examples.
@@ -330,5 +334,6 @@ source files to contain the function (method) definitions.
 3. Create accessor and mutator functions or macros for all structure
 members.  That said, we must keep in mind that C has no "private" modifier
 to protect them from direct access by non-member functions, so it's up to
-the programmer to respect class boundaries.  The gen-get-set script can do
-most of the work here.
+the programmer to respect class boundaries.  The
+[auto-gen-get-set](https://github.com/outpaddling/auto-dev/tree/main/Scripts)
+script can do most of the work here.
