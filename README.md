@@ -294,6 +294,42 @@ respects standard build variables such as CC, CFLAGS, LDFLAGS, etc., which
 most package managers already provide as environment variables or via the
 make command.
 
+## Containers
+
+Containers are powerful tools and extremely useful when we need to isolate
+an environment for some reason. For example, they can be used very
+effectively to house numerous virtual web servers on the same hardware in
+complete isolation from each other, providing a high level of security with
+minimal overhead.  They can also be used for testing software in a pristine
+environment without the need to maintaining separate hardware for testing.
+They largely serve the same purpose as a virtual machine or emulator, but
+with much lower overhead.  The down side is that they are generally limited
+to running an operating system or application highly compatible with the host.
+
+Unfortunately, it seems that every great innovation quickly becomes a solution
+looking for problems and people flock to it like bugs to a lamp, employing it
+in inappropriate situations in an attempt to look sophisticated.
+
+Before you get caught up in a fad that will cost you and your users a lot
+of time and effort, think about the real cost and benefits.  
+Well-designed application software rarely benefits from being
+containerized.  If you have a clean build system, maintain compatibility with
+maintream prerequisite software, and take care to avoid conflicts with other
+applications, there will be no need to maintain a container and make users
+jump through the additional hoops of using it.  They should be able to just
+install it with a simple command and run it.
+
+In the case of containers, they are often used to cover up inadequacies in
+software design rather than correct them.  E.g., they can be used as a
+mechanism to bundle outdated, buggy libraries without causing conflicts with
+other versions, since they are isolated from each other.  Sweeping problems
+into a container rather than correcting them with proper code maintenance
+only allows problems to accumulate.  It is clearly not a sustainable approach
+to software development and deployment.
+
+Use containers where they have a legitimate benefit, but never to isolate
+quality issues from the host system.
+
 ## OOP in C
 
 Object oriented design is a good practice and important for keeping complex
