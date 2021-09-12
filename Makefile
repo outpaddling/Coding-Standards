@@ -151,6 +151,7 @@ depend:
 
 clean:
 	rm -f ${OBJS} ${BIN} *.nr
+	rm -rf *.dSYM
 
 # Keep backup files during normal clean, but provide an option to remove them
 realclean: clean
