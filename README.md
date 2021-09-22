@@ -373,3 +373,34 @@ to protect them from direct access by non-member functions, so it's up to
 the programmer to respect class boundaries.  The
 [auto-gen-get-set](https://github.com/outpaddling/auto-dev/tree/main/Scripts)
 script can do most of the work here.
+
+## Just say NO to Creeping Feature Syndrome
+
+Creeping feature syndrome is a situation where good intentions ruin good
+software over time.  Features that aren't all that helpful but seem like a
+good idea gradually add to the complexity of the code and eventually erode
+maintainability and reliability.
+
+We all like to be creative and make end-users happy, but there are negative
+consequences to consider as well.
+Before adding a cool new feature that you or one of your users feels will add
+convenience, assess the real value vs the cost of writring and more
+importantly, maintaining the additional code.
+
+Follow the example of Dennis Ritchie and friends.  They designed C and Unix
+by stripping away redundant and low-value features from earlier languages
+and operating systems and then committed to keeping them out.  For example,
+C follows the rule that if a feature can be implemented reasonably well by
+a library function, then it should not be part of the language.  Hence
+```
+if ( strcmp(string1,string2) == 0 )
+```
+instead of
+```
+if ( string1 == string2 )
+```
+The latter is a little prettier, but has no objective benefit.  It makes the
+compiler more complex for no good reason.
+
+If your software provides a way to accmplish a task, don't add more features
+just to make the same task a little more intuitive.
