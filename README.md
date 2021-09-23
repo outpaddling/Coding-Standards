@@ -142,6 +142,9 @@ same algorithm.  Just-in-time compiled languages like Java and Numba do
 much better, but still fall far short of C, C++, and Fortran while also
 using far more memory.
 
+C is a simple language that anyone can master, and using it, you can write
+very fast code without having to be overly clever.
+
 https://acadix.biz/RCUG/HTML/ch15s04.html#compiled-interpreted
 
 3. Don't use loops (including hidden loops like string, vector, or matrix
