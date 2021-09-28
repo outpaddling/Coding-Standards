@@ -42,6 +42,10 @@ understand a code block.
 
 ## Portability
 
+POSIX is powerful.  Using strictly POSIX code, we can meet most peoples'
+needs most of the time.  No need to hinder them by using extensions that
+aren't needed from an OS they don't use.
+
 All code should run on any POSIX platform and any CPU architecture.
 
 1. Write endian-independent code
