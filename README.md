@@ -28,10 +28,12 @@ a typical C project, about 2/3 to 3/4 of all the code I write ends up in
 libraries.
 
 2. Absolutely no global variables unless there is no alternative.  In my
-decades of programming, the only place I've encountered where global variables
-are unavoidable is interrupt service routines (ISRs).  They have no place
-in application programming.  There are other constructs available in modern
-languages that make modular programming convenient and efficient.
+decades of programming, the only places I've encountered where global variables
+are unavoidable are interrupt service routines (ISRs) and event handlers,
+i.e. subprograms that are called asynchronously rather than via the normal
+interface.  They have no place in application programming.  There are other
+constructs available in modern languages that make modular programming
+convenient and efficient.
 
 3. Write cohesive code, i.e. keep related code together. Each subprogram
 should serve exactly one purpose and each purpose should be served by
