@@ -76,7 +76,7 @@ platforms.
 
 3. If there is a good reason to write platform-dependent code (e.g. to
 double program speed by using AVX instructions), keep a portable
-implementation alongside the x86-optimized code.  A suboptimal solution
+implementation alongside the x86-optimized code.  A sub-optimal solution
 for Power, ARM, and RISC-V is better than nothing.
 
 4. Before writing platform-specific code for speed, first see of the
@@ -99,11 +99,21 @@ frequently.
 ## Simplicity
 
 1. The simplest solution is always the easiest to maintain and usually the
-fastest.  Complicating the code for a 10% gain in speed is usually a waste.
+fastest, or at least close to it.  Simpler code will have fewer bugs, which
+means end-users also waste less time dealing with problems.
 
 2. Minimize complexity, not lines of code.  Writing cryptic, overly clever
 code to make it more compact is just showing off, and makes maintenance harder,
 not easier.  Readability is as important as any other trait.
+
+3. Don't overoptimize at the expense of simplicity and readability.
+Man-hours usually cost more than CPU-hours (unless the application uses
+massive amounts of CPU time), so minimizing development and maintenance
+time is usually worth more than a 10% reduction in run-time.  Do the math
+before you complicate the code with cleverness just for the sake your ego.
+If users run a program once a week and it takes 20 minutes, reducing run
+time to 15 minutes isn't worth complicating the code for.  If it uses 2,000
+core-hours on an HPC cluster, reducing this to 1,500 is worth some effort.
 
 ## Readability
 
@@ -166,7 +176,8 @@ often an approach that uses scalar operations instead.
 
 *Always* try to minimize memory use.  Using more memory rarely speeds up
 a program and more often slows it down.  Programs that use less memory have
-a better cache hit ratio and hence far fewer memory wait cycles.  Occasionally
+a better cache hit ratio and hence far fewer memory wait cycles.  Cache
+access is an order of magnitude faster than DRAM access.  Occasionally
 it is advantageous to bring large amounts of data into memory (e.g. sorting,
 hash tables), but work hard to find alternatives.  As an example, adding two
 matrices stored in files
