@@ -96,7 +96,7 @@ you'll be able to find it easily.
 as soon as it has functionality to test, so that it will be easy to test
 frequently.
 
-## Simplicity
+## Simplicity is the ultimate sophistication
 
 1. The simplest solution is always the easiest to maintain and usually the
 fastest, or at least close to it.  Simpler code will have fewer bugs, which
@@ -158,10 +158,10 @@ same algorithm.  Just-in-time compiled languages like Java and Numba do
 much better, but still fall far short of C, C++, and Fortran while also
 using far more memory.
 
-C is a simple language that anyone can master, and using it, you can write
-very fast code without having to be overly clever.
+    C is a simple language that anyone can master, and using it, you can write
+    very fast code without having to be overly clever.
 
-https://acadix.biz/RCUG/HTML/ch15s04.html#compiled-interpreted
+    https://acadix.biz/RCUG/HTML/ch15s04.html#compiled-interpreted
 
 3. Don't use loops (including hidden loops like string, vector, or matrix
 copying if the language supports them) if they can be avoided.  There is
@@ -218,68 +218,68 @@ and easier to debug than more sophisticated build systems.  See
 https://github.com/outpaddling/Coding-Standards/blob/main/makevars.md
 for detailed info on standard/common variables.
 
-Configure tools like GNU autoconf and cmake may seem to make things easier,
-but they are cans of worms.  Most of them end up becoming extremely complex
-in the attempt to make them work in various environments and almost invariably
-fail to achieve this goal.  When they don't work (which is often)
-it's a nightmare for the end user.  They'd have an easier time with a simple
-Makefile.
-
-Respecting these variables means two things:
-
-Use them.  E.g. use CC, not CCOMPILER, in your make rules.
-
-Allow them to be overridden by environment variables or make arguments.
-This can be achieved by assigning with ?= rather than = or :=.  ?= sets
-a variable only if it was not already set in the environment or by
-a make argument.  If a value is actually required, it can be added
-using +=.  Suppose we have a program that must be compiled with the
-C macro POSIX defined:
-
-```
-# Does not respect environment or make arguments and compiles with
-# gcc -march=native -O4.  This will not work where gcc is not installed.
-# If it does, it results in non-portable executables that will not run
-# on a lesser CPU because the compiler generates machine code for the
-# CPU where it is compiled.
-CC      = gcc
-CFLAGS  = -march=native -O4 -DPOSIX
-
-prog:   prog.c
-	${CC} ${CFLAGS} prog.c -o prog
-```
-
-```
-# Respects environment and make arguments
-CC      ?= gcc                  # Use gcc only if CC is not specified
-CFLAGS  ?= -march=native -O4    # Use only if CFLAGS not specified
-CFLAGS  += -DPOSIX              # Append to CFLAGS in all cases
-
-prog:   prog.c
-	${CC} ${CFLAGS} prog.c -o prog
-```
-
-Now suppose we compile as follows:
-
-```
-make CC=cc CFLAGS="-O2 -pipe -Wall"
-
-```
-or
-```
-env CC=cc CFLAGS="-O2 -pipe -Wall" make
-```
-With the first makefile, we may see
-```
-gcc -march=native -O4 prog.c -o prog
-```
-Some make programs allow make arguments like CC=cc to override assignments
-like CC=gcc in the makefile, but others do not.
-
-With the second makefile, we will always see
-```
-cc -O2 -pipe -Wall prog.c -o prog
-```
+    Configure tools like GNU autoconf and cmake may seem to make things easier,
+    but they are cans of worms.  Most of them end up becoming extremely complex
+    in the attempt to make them work in various environments and almost invariably
+    fail to achieve this goal.  When they don't work (which is often)
+    it's a nightmare for the end user.  They'd have an easier time with a simple
+    Makefile.
+    
+    Respecting these variables means two things:
+    
+    Use them.  E.g. use CC, not CCOMPILER, in your make rules.
+    
+    Allow them to be overridden by environment variables or make arguments.
+    This can be achieved by assigning with ?= rather than = or :=.  ?= sets
+    a variable only if it was not already set in the environment or by
+    a make argument.  If a value is actually required, it can be added
+    using +=.  Suppose we have a program that must be compiled with the
+    C macro POSIX defined:
+    
+    ```
+    # Does not respect environment or make arguments and compiles with
+    # gcc -march=native -O4.  This will not work where gcc is not installed.
+    # If it does, it results in non-portable executables that will not run
+    # on a lesser CPU because the compiler generates machine code for the
+    # CPU where it is compiled.
+    CC      = gcc
+    CFLAGS  = -march=native -O4 -DPOSIX
+    
+    prog:   prog.c
+	    ${CC} ${CFLAGS} prog.c -o prog
+    ```
+    
+    ```
+    # Respects environment and make arguments
+    CC      ?= gcc                  # Use gcc only if CC is not specified
+    CFLAGS  ?= -march=native -O4    # Use only if CFLAGS not specified
+    CFLAGS  += -DPOSIX              # Append to CFLAGS in all cases
+    
+    prog:   prog.c
+	    ${CC} ${CFLAGS} prog.c -o prog
+    ```
+    
+    Now suppose we compile as follows:
+    
+    ```
+    make CC=cc CFLAGS="-O2 -pipe -Wall"
+    
+    ```
+    or
+    ```
+    env CC=cc CFLAGS="-O2 -pipe -Wall" make
+    ```
+    With the first makefile, we may see
+    ```
+    gcc -march=native -O4 prog.c -o prog
+    ```
+    Some make programs allow make arguments like CC=cc to override assignments
+    like CC=gcc in the makefile, but others do not.
+    
+    With the second makefile, we will always see
+    ```
+    cc -O2 -pipe -Wall prog.c -o prog
+    ```
 
 2. Use portable commands.  E.g., there is generally no reason to set
 CC to "gcc", since "cc" and "gcc" are the same on GNU-based systems such
@@ -292,18 +292,18 @@ that by running "make CC=gcc".
 and nothing else.  This is not only a good idea, it's policy for many
 mainstream package managers:
 
-https://fedoraproject.org/wiki/Bundled_Libraries?rd=Packaging:Bundled_Libraries
-
-https://www.debian.org/doc/debian-policy/ch-source.html#s-embeddedfiles
-
-https://wiki.gentoo.org/wiki/Why_not_bundle_dependencies
-
-https://docs.freebsd.org/en/books/porters-handbook/special/#bundled-libs
-
-Instead, write software that works with the mainstream versions of all
-dependencies, which are installed separately.  It's easier to maintain
-compatibility with mainstream libraries than to maintain a bundled
-fork of each of them.
+    https://fedoraproject.org/wiki/Bundled_Libraries?rd=Packaging:Bundled_Libraries
+    
+    https://www.debian.org/doc/debian-policy/ch-source.html#s-embeddedfiles
+    
+    https://wiki.gentoo.org/wiki/Why_not_bundle_dependencies
+    
+    https://docs.freebsd.org/en/books/porters-handbook/special/#bundled-libs
+    
+    Instead, write software that works with the mainstream versions of all
+    dependencies, which are installed separately.  It's easier to maintain
+    compatibility with mainstream libraries than to maintain a bundled
+    fork of each of them.
 
 3. Make the build-system package-friendly.  If it's trivial to create a
 Debian package, a FreeBSD port, a MacPort, a pkgsrc packages, etc., then
