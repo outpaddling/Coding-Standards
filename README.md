@@ -86,6 +86,11 @@ etc. instructions automatically using portable compiler flags like
 ```-march-native```.  In some cases this may produce better results than
 hand-written assembly language.
 
+5. Code should build using STOCK tools on any currently supported *nix
+distribution.
+Users should not be required to install a newer compiler in order to build
+the code.
+
 ## Testing
 
 1. Test new code frequently.  Do not write more than a few dozen lines of
