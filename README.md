@@ -151,6 +151,22 @@ it this way.
     buff_size *= 2;     // Avoid having to realloc too frequently (useful)
 ```
 
+3. cleverness * wisdom = constant
+
+Making the meaning of your code obvious is far more important than showing
+off your intricate knowledge of programming.  For example, there's no
+practical benefit to omitting ```== 0``` or similar in a loop or if
+condition.  It saves a few keystrokes, but does not help performance.
+It just makes the reader work a little harder to understand the code.
+
+```
+char    *p, *name;
+
+for (p = name; *p; ++p)           // Just showing off
+for (p = name; *p != 0; ++p)      // Not clear that we're scanning chars
+for (p = name; *p != '\0'; ++p)   // Clear
+```
+
 ## Performance
 
 1. Use the most efficient available algorithm *for the purpose*.  This
