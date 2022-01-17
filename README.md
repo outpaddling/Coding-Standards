@@ -27,7 +27,7 @@ they are incorporated.
     a typical C project, about 2/3 to 3/4 of all the code I write ends up in
     libraries.
     
-    We can employ top-down design so that the needs of applications drive
+    We can employ top-down programming so that the needs of applications drive
     the API design, while at the same time targeting most code for a library.
     To achieve this, develop each new function as part of the application
     it will serve first, but design it to be part of a library to which it
