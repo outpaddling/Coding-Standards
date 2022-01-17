@@ -20,12 +20,26 @@ they are incorporated.
 
 ## Modularity
 
-1. Any function that might be useful to another program should be placed
-in a library such as
-[libxtend](https://github.com/outpaddling/libxtend) or
-[biolibc](https://github.com/outpaddling/biolibc), rather than the application.  For
-a typical C project, about 2/3 to 3/4 of all the code I write ends up in
-libraries.
+1.  Any function that might be useful to another program should be placed
+    in a library such as
+    [libxtend](https://github.com/outpaddling/libxtend) or
+    [biolibc](https://github.com/outpaddling/biolibc), rather than the application.  For
+    a typical C project, about 2/3 to 3/4 of all the code I write ends up in
+    libraries.
+    
+    We can employ top-down design so that the needs of applications drive
+    the API design, while at the same time targeting most code for a library.
+    To achieve this, develop each new function as part of the application
+    it will serve first, but design it to be part of a library to which it
+    will be moved after it is fully tested.
+    
+    For example, the libxtend strupper() function was developed as part of
+    fastq-trim, which must use case-insensitive comparison.  It also uses a
+    string comparison method that tolerates a few differences due to
+    DNA sequencing read errors, hence strcasecmp() will not work.  The
+    adapter sequence to be compared to all reads is converted to upper case
+    using strupper() ahead of time for efficiency.  Once fastq-trim was
+    fully tested, strupper() was moved to libxtend.
 
 2. Absolutely no global variables unless there is no alternative.  In my
 decades of programming, the only places I've encountered where global variables
@@ -355,7 +369,7 @@ Before you get caught up in a fad that will cost you and your users a lot
 of time and effort, think about the real cost and benefits.  
 Well-designed application software rarely benefits from being
 containerized.  If you have a clean build system, maintain compatibility with
-maintream prerequisite software, and take care to avoid conflicts with other
+mainstream prerequisite software, and take care to avoid conflicts with other
 applications, there will be no need to maintain a container and make users
 jump through the additional hoops of using it.  They should be able to just
 install it with a simple command and run it.
@@ -425,7 +439,7 @@ maintainability and reliability.
 We all like to be creative and make end-users happy, but there are negative
 consequences to consider as well.
 Before adding a cool new feature that you or one of your users feels will add
-convenience, assess the real value vs the cost of writring and more
+convenience, assess the real value vs the cost of writing and more
 importantly, maintaining the additional code.
 
 Follow the example of Dennis Ritchie and friends.  They designed C and Unix
@@ -443,5 +457,5 @@ if ( string1 == string2 )
 The latter is a little prettier, but has no objective benefit.  It makes the
 compiler more complex for no good reason.
 
-If your software provides a way to accmplish a task, don't add more features
+If your software provides a way to accomplish a task, don't add more features
 just to make the same task a little more intuitive.
