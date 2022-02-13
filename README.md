@@ -6,7 +6,8 @@ has no shortage of brilliant minds, but a severe shortage of experienced
 and disciplined developers.  As a result, it abounds in code that implements
 ingenious algorithms with low quality code, documentation, and build systems.
 
-This makes the programs less accessible and less reliable, impeding critical
+This makes the programs less accessible, less efficient, and less reliable,
+impeding critical
 research as researchers struggle to install, learn, and use them.  A
 core goal of all my projects is software that is easy to install on any
 POSIX platform, well-documented, easy to use, reliable, and highly CPU
@@ -23,15 +24,15 @@ they are incorporated.
 1.  Any function that might be useful to another program should be placed
     in a library such as
     [libxtend](https://github.com/outpaddling/libxtend) or
-    [biolibc](https://github.com/outpaddling/biolibc), rather than the application.  For
-    a typical C project, about 2/3 to 3/4 of all the code I write ends up in
-    libraries.
+    [biolibc](https://github.com/outpaddling/biolibc), rather than reside in
+    an application.  For a typical C project, about 2/3 to 3/4 of all the
+    code I develop ends up in libraries.
     
     We can employ top-down programming so that the needs of applications drive
     the API design, while at the same time targeting most code for a library.
-    To achieve this, develop each new function as part of the application
-    it will serve first, but design it to be part of a library to which it
-    will be moved after it is fully tested.
+    To achieve this, first develop each new function as part of the
+    application it will serve, but design it to be part of a library to
+    which it will be moved after it is fully tested.
     
     For example, the libxtend strupper() function was developed as part of
     fastq-trim, which must use case-insensitive comparison.  It also uses a
@@ -42,25 +43,26 @@ they are incorporated.
     fully tested, strupper() was moved to libxtend.
 
 2. Absolutely no global variables unless there is no alternative.  In my
-decades of programming, the only places I've encountered where global variables
-are unavoidable are interrupt service routines (ISRs) and event handlers,
-i.e. subprograms that are called asynchronously rather than via the normal
-interface.  They have no place in application programming.  There are other
-constructs available in modern languages that make modular programming
-convenient and efficient.
+decades of programming, the only places I've encountered where global
+variables are unavoidable are interrupt service routines (ISRs) and event
+handlers, i.e. subprograms that are called asynchronously rather than via
+the normal interface.  They have no place in application programming.
+There are other constructs available in modern languages that make modular
+programming convenient and efficient.
 
 3. Write cohesive code, i.e. keep related code together. Each subprogram
 should serve exactly one purpose and each purpose should be served by
-exactly one subprogram.  Initialize loop variables
-in or immediately before the loop, not pages earlier.  The reader should
-not have to jump around the program to find all the pieces needed to
-understand a code block.
+exactly one subprogram.  Initialize loop variables in or immediately
+before the loop, not where it is out-of-sight such as in the variable
+definition at the start of a larger block.  The reader should not have
+to jump around the program to find all the pieces needed to understand a
+code block.
 
 ## Portability
 
-POSIX is powerful.  Using strictly POSIX code, we can meet most peoples'
-needs most of the time.  No need to hinder them by using extensions that
-aren't needed from an OS they don't use.
+POSIX is powerful.  Using strictly POSIX code, we can meet virtually all
+needs.  No need to hinder users by using extensions that aren't needed
+from an OS they don't use.
 
 All code should run on any POSIX platform and any CPU architecture.
 
@@ -80,30 +82,47 @@ All code should run on any POSIX platform and any CPU architecture.
     #endif
     ```
 
-2. Avoid *nixisms: Look for portable implementations rather than lace
-the code with #ifdefs for specific platforms.  The first solution you
-come up with when coding on BSD, Linux, or Mac may not be portable.  Don't
-get attached to it.  If it doesn't work on other platforms, look for a more
-portable solution before adding #ifdefs to your code.  Then you'll have a
-permanent solution rather than more work down the road to support other new
-platforms.
+2. Avoid *nixisms
 
-3. If there is a good reason to write platform-dependent code (e.g. to
-double program speed by using AVX instructions), keep a portable
+    Look for portable implementations rather than lace
+    the code with #ifdefs for specific platforms.  The first solution you
+    come up with when coding on BSD, Linux, or Mac may not be portable.  Don't
+    get attached to it.  If it doesn't work on other platforms, look for a more
+    portable solution before adding #ifdefs to your code.  Then you'll have a
+    permanent solution rather than more work down the road to support other new
+    platforms.
+    
+    Examples:
+    
+    1. Assuming "sh" is "bash" is a common mistake that will not work
+    on Debian or BSD, which use Almquist shell derivatives rather than
+    bash.
+    
+    2. Parsing files in /proc is not portable.  /proc is deprecated on
+    FreeBSD and the files use different formats on different systems.
+    
+    3. Don't require Linux-only features such as cgroups.  Using them is
+    fine, but make them optional.
+    
+3. If there is a good reason to write hardware-specific code (e.g. to
+increase program speed by using AVX instructions), keep a portable
 implementation alongside the x86-optimized code.  A sub-optimal solution
 for Power, ARM, and RISC-V is better than nothing.
 
-4. Before writing platform-specific code for speed, first see of the
+4. Before writing platform-specific code for speed, first see if the
 compiler's optimizer
 can optimize portable code.  Modern compilers can generate SSE, AVX, Altivec,
 etc. instructions automatically using portable compiler flags like
 ```-march-native```.  In some cases this may produce better results than
-hand-written assembly language.
+hand-written non-portable code.
 
 5. Code should build using STOCK tools on any currently supported *nix
 distribution.
 Users should not be required to install a newer compiler in order to build
-the code.
+the code.  This is a common problem for RHEL-based platforms, which use
+older tools than the bleeding-edge distributions many developers use.
+It may be tempting to use the latest C++ features, but it's not worth
+the headaches it will cause if users need to run your code on RHEL.
 
 ## Testing
 
@@ -111,9 +130,10 @@ the code.
 code without fully testing the changes.  This way if there is a bug,
 you'll be able to find it easily.
 
-2. Prepare a test script and simple test data for each library and executable
-as soon as it has functionality to test, so that it will be easy to test
-frequently.
+2. You can facilitate this by investing
+a very small amount of time preparing a test script and a small sample
+input that triggers all program features and can be processed in seconds
+or minutes.
 
 ## Simplicity is the ultimate sophistication
 
@@ -122,17 +142,27 @@ fastest, or at least close to it.  Simpler code will have fewer bugs, which
 means end-users also waste less time dealing with problems.
 
 2. Minimize complexity, not lines of code.  Writing cryptic, overly clever
-code to make it more compact is just showing off, and makes maintenance harder,
+code to make it more compact or meaninglessly faster is just showing off,
+and makes maintenance harder,
 not easier.  Readability is as important as any other trait.
+
+```
+// Technically faster, but cryptic and probably has no effect on run time
+// Use tricks like this only if they provide a meaningful speedup
+buff_size <<= 1;
+
+// Intent is clear here
+buff_size *= 2;
+```
 
 3. Don't overoptimize at the expense of simplicity and readability.
 Man-hours usually cost more than CPU-hours (unless the application uses
 massive amounts of CPU time), so minimizing development and maintenance
 time is usually worth more than a 10% reduction in run-time.  Do the math
-before you complicate the code with cleverness just for the sake your ego.
+before you complicate the code with cleverness that benefits only your ego.
 If users run a program once a week and it takes 20 minutes, reducing run
-time to 15 minutes isn't worth complicating the code for.  If it uses 2,000
-core-hours on an HPC cluster, reducing this to 1,500 is worth some effort.
+time to 15 minutes is inconsequential.  If it uses 2,000 core-hours on an
+HPC cluster, reducing this to 1,500 is worth significant effort.
 
 ## Readability
 
@@ -145,14 +175,16 @@ comments.
 
 ```
     int     count;          // Ambiguous
-    int     record_count;   // Better
+    int     record_count;   // Still ambiguous, what's in the record?
+    int     client_count;   // Better
 ```
 
-3. Comments should be brief and not cluttered with useless language.
+3. Comments should be brief and should add information that the code
+does not already reveal.
 
 ```
-    int     record_count;   // Integer variable to count records (useless)
-    int     record_count;   // Total records processed so far (helpful)
+    int     client_count;   // Integer variable to count clients (useless)
+    int     client_count;   // Total clients processed so far (helpful)
 ```
 
 4. Comments should never state WHAT a piece of code is doing.  This only
@@ -161,8 +193,8 @@ doing what it does, i.e. how it serves the purpose and why you chose to do
 it this way.
 
 ```
-    buff_size *= 2;     // Double buff_size (useless)
-    buff_size *= 2;     // Avoid having to realloc too frequently (useful)
+    buff_size *= 2;     // Double buff_size (incredibly useless)
+    buff_size *= 2;     // Double to avoid too many realloc()s (helpful)
 ```
 
 3. cleverness * wisdom = constant
@@ -218,7 +250,7 @@ hash tables), but work hard to find alternatives.  As an example, adding two
 matrices stored in files
 and saving the result to another file does not require the use of arrays.
 (Think about it.)  Using arrays for this task only slows down the program
-and limits the size of arrays it can process.
+and limits the size of the matrices it can process.
 
 ## Documentation
 
