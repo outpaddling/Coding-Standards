@@ -124,6 +124,13 @@ older tools than the bleeding-edge distributions many developers use.
 It may be tempting to use the latest C++ features, but it's not worth
 the headaches it will cause if users need to run your code on RHEL.
 
+## Robustness
+
+Check for every possible error condition.  No exceptions.  This means
+checking the status of every I/O operation, memory allocation, etc.
+If a function returns a status value, the code must check it and take
+appropriate action if it indicates a problem.
+
 ## Testing
 
 1. Test new code frequently.  Do not write more than a few dozen lines of
