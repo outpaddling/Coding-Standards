@@ -21,7 +21,10 @@ they are incorporated.
 
 ## Modularity
 
-1.  Any function that might be useful to another program should be placed
+1.  Always try to write code that can be used anywhere rather than just
+    for your own purposes.
+
+    Any function that might be useful to another program should be placed
     in a library such as
     [libxtend](https://github.com/outpaddling/libxtend) or
     [biolibc](https://github.com/outpaddling/biolibc), rather than reside in
@@ -29,17 +32,20 @@ they are incorporated.
     code I develop ends up in libraries.
     
     We can employ top-down programming so that the needs of applications drive
-    the API design, while at the same time targeting most code for a library.
+    the API design, while at the same time targeting most code for more
+    general use.
     To achieve this, first develop each new function as part of the
-    application it will serve, but design it to be part of a library to
-    which it will be moved after it is fully tested.
+    application it will serve, but design it to be independent of the program
+    so that it can be easily moved to a library after it is fully tested.
     
     For example, the libxtend strupper() function was developed as part of
-    fastq-trim, which must use case-insensitive comparison.  It also uses a
+    fastq-trim, which must use case-insensitive comparison.  Fastq-trim
+    also uses a
     string comparison method that tolerates a few differences due to
     DNA sequencing read errors, hence strcasecmp() will not work.  The
     adapter sequence to be compared to all reads is converted to upper case
-    using strupper() ahead of time for efficiency.  Once fastq-trim was
+    using strupper() ahead of time so that the LC->UC conversion is done only
+    once, rather than during every comparison.  Once fastq-trim was
     fully tested, strupper() was moved to libxtend.
 
 2. Absolutely no global variables unless there is no alternative.  In my
