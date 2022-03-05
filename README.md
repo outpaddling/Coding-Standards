@@ -130,6 +130,16 @@ older tools than the bleeding-edge distributions many developers use.
 It may be tempting to use the latest C++ features, but it's not worth
 the headaches it will cause if users need to run your code on RHEL.
 
+## Interoperability and Interchangeability
+
+Write software accessible to the widest possible audience.  If there are
+relevant standards in the field being served, adhere to them.  Graphical
+programs should run under any desktop environment.  Programs that only
+work well under a certain desktop environment force others to waste time
+duplicating their functionality.  Scientific programs should input and
+output files compatible with related software.  The more choices scientists
+have for software tools, the fewer delays their research will encounter.
+
 ## Robustness
 
 Check for every possible error condition.  No exceptions.  This means
