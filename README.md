@@ -64,20 +64,28 @@ definition at the start of a larger block.  The reader should not have
 to jump around the program to find all the pieces needed to understand a
 code block.
 
-## Portability
+## Hardware Portability
 
-POSIX is powerful.  Using strictly POSIX code, we can meet virtually all
-needs.  No need to hinder users by using extensions that aren't needed
-from an OS they don't use.
+MAKE NO ASSUMPTIONS ABOUT THE HARDWARE THAT WILL RUN YOUR CODE.
 
-All code should run on any POSIX platform and any CPU architecture.
+Some code designed for big data computations could also be useful on
+a microcontroller and vice-versa.
 
-1. Write endian-independent code
+1.  Choose data types according to the needs of the problem.  E.g. In C,
+    an integer variable that may contain values beyond the range of a 32-bit
+    integer type should be defined as uint64_t or int64_t.  The size
+    of "int", "long", and "size_t" may be smaller than 64 bits on some systems.
+    Some people complain about the variable size of these data types,
+    but this feature allows you to write portable code that will
+    be optimal on all platforms.  Use them when you don't care about the
+    range and use int64_t, int32_t, etc. when you do.
 
-    1. Use bit operations and masks instead of bit fields.  See
+2.  Write endian-independent code
+
+    Use bit operations and masks instead of bit fields.  See
     https://github.com/outpaddling/Coding-Standards/blob/main/endian.c.
     
-    2. If saving numeric data in binary format, use something like the
+    If saving numeric data in binary format, use something like the
     C bswap() functions in endian.h as needed.
     
     ```
@@ -88,7 +96,27 @@ All code should run on any POSIX platform and any CPU architecture.
     #endif
     ```
 
-2. Avoid *nixisms
+3. If there is a good reason to write hardware-specific code (e.g. to
+increase program speed by using AVX instructions), keep a portable
+implementation alongside the x86-optimized code.  A sub-optimal solution
+for Power, ARM, and RISC-V is better than nothing.
+
+4. Before writing platform-specific code for speed, first see if the
+compiler's optimizer
+can optimize portable code.  Modern compilers can generate SSE, AVX, Altivec,
+etc. instructions automatically using portable compiler flags like
+```-march-native```.  In some cases this may produce better results than
+hand-written non-portable code.
+
+2.  OS Portability
+
+POSIX is powerful.  Using strictly POSIX code, we can meet virtually all
+needs.  No need to hinder users by using extensions that aren't needed
+from an OS they don't use.
+
+All code should run on any POSIX platform and any CPU architecture.
+
+1. Avoid *nixisms
 
     Look for portable implementations rather than lace
     the code with #ifdefs for specific platforms.  The first solution you
@@ -110,25 +138,13 @@ All code should run on any POSIX platform and any CPU architecture.
     3. Don't require Linux-only features such as cgroups.  Using them is
     fine, but make them optional.
     
-3. If there is a good reason to write hardware-specific code (e.g. to
-increase program speed by using AVX instructions), keep a portable
-implementation alongside the x86-optimized code.  A sub-optimal solution
-for Power, ARM, and RISC-V is better than nothing.
-
-4. Before writing platform-specific code for speed, first see if the
-compiler's optimizer
-can optimize portable code.  Modern compilers can generate SSE, AVX, Altivec,
-etc. instructions automatically using portable compiler flags like
-```-march-native```.  In some cases this may produce better results than
-hand-written non-portable code.
-
-5. Code should build using STOCK tools on any currently supported *nix
-distribution.
-Users should not be required to install a newer compiler in order to build
-the code.  This is a common problem for RHEL-based platforms, which use
-older tools than the bleeding-edge distributions many developers use.
-It may be tempting to use the latest C++ features, but it's not worth
-the headaches it will cause if users need to run your code on RHEL.
+2.  Code should build using STOCK tools on any currently supported *nix
+    distribution.
+    Users should not be required to install a newer compiler in order to build
+    the code.  This is a common problem for RHEL-based platforms, which use
+    older tools than the bleeding-edge distributions many developers use.
+    It may be tempting to use the latest C++ features, but it's not worth
+    the headaches it will cause if users need to run your code on RHEL.
 
 ## Interoperability and Interchangeability
 
