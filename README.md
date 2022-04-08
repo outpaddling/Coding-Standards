@@ -19,6 +19,14 @@ projects should follow these guidelines to the maximum extent possible.
 Patches and merge requests that fall short will need to be cleaned up before
 they are incorporated.
 
+## Rule number 1
+
+Never let quality slip.  Start with a simple, minimalist program and
+make the code and build system impeccable.
+
+Then add only useful features, with great care to maintain or improve
+the quality of every aspect of the project.
+
 ## Modularity
 
 1.  Always try to write code that can be used anywhere rather than just
