@@ -211,6 +211,27 @@ If users run a program once a week and it takes 20 minutes, reducing run
 time to 15 minutes is inconsequential.  If it uses 2,000 core-hours on an
 HPC cluster, reducing this to 1,500 is worth significant effort.
 
+## Minimize dependencies, especially big ones
+
+Utilizing existing libraries and programs rather than reinventing the
+wheel is generally a smart move.  But not always.
+
+1. Making your code depend on a huge library (e.g. boost) in order to use
+one or two functions from it may incur more cost than benefit.  It increases
+build/install time and increases that possibility of breakage down the
+road due to API changes in the library.
+
+2. Make sure that any dependencies you add are high quality.  If the only
+existing wheel is an unbalanced limestone slab, then reinventing it would
+be a good move.
+
+3. If there are multiple implementations of a dependency (e.g.
+BLAS/OpenBLAS), stick to standards (avoid using extensions supported by
+only one or a few of them) so that they will be interchangeable
+for your code.  This will increase the odds of a successful deployment
+for all of your users, since any one implementation could have critical
+bugs at a given time.
+
 ## Readability
 
 1. All code is consistently indented with blank lines separating code blocks.
@@ -419,7 +440,7 @@ mainstream package managers:
     compatibility with mainstream libraries than to maintain a bundled
     fork of each of them.
 
-3. Make the build-system package-friendly.  If it's trivial to create a
+4. Make the build-system package-friendly.  If it's trivial to create a
 Debian package, a FreeBSD port, a MacPort, a pkgsrc packages, etc., then
 we'll more likely get free help from packager maintainers, so we can stay
 out of the software management business and focus on
