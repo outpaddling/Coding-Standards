@@ -182,16 +182,21 @@ a very small amount of time preparing a test script and a small sample
 input that triggers all program features and can be processed in seconds
 or minutes.
 
-## Simplicity is the ultimate sophistication
+## RUSC (Reduced Unnecessary Software Complexity)
+
+Simplicity is the ultimate sophistication.
+
+Apply the wisdom of the RISC (Reduced Instruction Set Computer) hardware
+design ideal to software development.
 
 1. The simplest solution is always the easiest to maintain and usually the
 fastest, or at least close to it.  Simpler code will have fewer bugs, which
 means end-users also waste less time dealing with problems.
 
-2. Minimize complexity, not lines of code.  Writing cryptic, overly clever
+2. Minimize COMPLEXITY, not lines of code.  Writing cryptic, overly clever
 code to make it more compact or meaninglessly faster is just showing off,
-and makes maintenance harder,
-not easier.  Readability is as important as any other trait.
+and makes maintenance harder, not easier.  Readability is as important as
+any other trait.
 
 ```
 // Technically faster, but cryptic and probably has no effect on run time
