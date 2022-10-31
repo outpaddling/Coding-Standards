@@ -1,6 +1,7 @@
 # Coding-Standards
 
-One of my aims as a bioinformatician is to raise the average quality of
+One of my aims as a bioinformatician with prior training and experience
+as a software and systems engineer, is to raise the average quality of
 code in the field.  Bioinformatics, and scientific computing in general,
 has no shortage of brilliant minds, but a severe shortage of experienced
 and disciplined developers.  As a result, it abounds in code that implements
@@ -13,16 +14,16 @@ core goal of all my projects is software that is easy to install on any
 POSIX platform, well-documented, easy to use, reliable, and highly CPU
 and memory efficient.
 
-This repository describes the coding standards for all projects under
+This repository describes the coding standards for projects under
 Github accounts "outpaddling" and "auerlab".  All contributions to these
-projects should follow these guidelines to the maximum extent possible.
+projects must follow these guidelines to the maximum extent possible.
 Patches and merge requests that fall short will need to be cleaned up before
 they are incorporated.
 
 ## Rule number 1
 
-Never let quality slip.  Start with a simple, minimalist program and
-make the code and build system impeccable.
+Never let quality slip.  Start with a simple, minimalist skeleton of a
+program and make the code and build system impeccable.
 
 Then add only useful features, with great care to maintain or improve
 the quality of every aspect of the project.
@@ -30,46 +31,52 @@ the quality of every aspect of the project.
 ## Modularity
 
 1.  Always try to write code that can be used anywhere rather than just
-    for your own purposes.
+    in this project.
 
     Any function that might be useful to another program should be placed
     in a library such as
     [libxtend](https://github.com/outpaddling/libxtend) or
     [biolibc](https://github.com/outpaddling/biolibc), rather than reside in
     an application.  For a typical C project, about 2/3 to 3/4 of all the
-    code I develop ends up in libraries.
+    code I develop ends up in libraries, so that it can easily be utilized
+    by any other application.
     
     We can employ top-down programming so that the needs of applications drive
-    the API design, while at the same time targeting most code for more
+    the API design, while at the same time designing the code for more
     general use.
     To achieve this, first develop each new function as part of the
     application it will serve, but design it to be independent of the program
-    so that it can be easily moved to a library after it is fully tested.
+    so that it can be easily factored out to a library after it has been
+    fully tested.
     
     For example, the libxtend strupper() function was developed as part of
-    fastq-trim, which must use case-insensitive comparison.  Fastq-trim
-    also uses a
+    fastq-trim, which must use case-insensitive comparison for DNA/RNA
+    sequences.  Fastq-trim also uses a
     string comparison method that tolerates a few differences due to
     DNA sequencing read errors, hence strcasecmp() will not work.  The
     adapter sequence to be compared to all reads is converted to upper case
     using strupper() ahead of time so that the LC->UC conversion is done only
     once, rather than during every comparison.  Once fastq-trim was
-    fully tested, strupper() was moved to libxtend.
+    fully tested, strupper() was moved to libxtend, since it is potentially
+    useful to many other programs.
 
 2. Absolutely no global variables unless there is no alternative.  In my
 decades of programming, the only places I've encountered where global
 variables are unavoidable are interrupt service routines (ISRs) and event
 handlers, i.e. subprograms that are called asynchronously rather than via
-the normal interface.  They have no place in application programming.
+a normal interface.  They have no place in application programming.
 There are other constructs available in modern languages that make modular
-programming convenient and efficient.
+programming convenient and efficient.  The notion that using global
+variables will greatly speed up a program by reducing function call overhead
+is a myth.  Well-designed functions have low overhead that will not be
+noticeable in most cases.
 
 3. Write cohesive code, i.e. keep related code together. Each subprogram
 should serve exactly one purpose and each purpose should be served by
 exactly one subprogram.  Initialize loop variables in or immediately
 before the loop, not where it is out-of-sight such as in the variable
 definition at the start of a larger block.  The reader should not have
-to jump around the program to find all the pieces needed to understand a
+to jump around the program to find all the information needed to understand a
 code block.
 
 ## Hardware Portability
@@ -85,8 +92,9 @@ a microcontroller and vice-versa.
     of "int", "long", and "size_t" may be smaller than 64 bits on some systems.
     Some people complain about the variable size of these data types,
     but this feature allows you to write portable code that will
-    be optimal on all platforms.  Use them when you don't care about the
-    range and use int64_t, int32_t, etc. when you do.
+    be optimal on all platforms.  Use int when it doesn't matter if a
+    variable is 16 bits or 32, and long when it doesn't matter if it's 32
+    or 64.  When it matters, use int64_t, int32_t, etc.
 
 2.  Write endian-independent code
 
@@ -119,8 +127,8 @@ hand-written non-portable code.
 2.  OS Portability
 
 POSIX is powerful.  Using strictly POSIX code, we can meet virtually all
-needs.  No need to hinder users by using extensions that aren't needed
-from an OS they don't use.
+needs.  No need to hinder users by using unnecessary extensions from an
+OS they don't use.
 
 All code should run on any POSIX platform and any CPU architecture.
 
@@ -131,7 +139,8 @@ All code should run on any POSIX platform and any CPU architecture.
     come up with when coding on BSD, Linux, or Mac may not be portable.  Don't
     get attached to it.  If it doesn't work on other platforms, look for a more
     portable solution before adding #ifdefs to your code.  Then you'll have a
-    permanent solution rather than more work down the road to support other new
+    permanent solution that will likely work on platforms you haven't even
+    tested yet, rather than more work down the road to support other new
     platforms.
     
     Examples:
@@ -141,16 +150,16 @@ All code should run on any POSIX platform and any CPU architecture.
     bash.
     
     2. Parsing files in /proc is not portable.  /proc is deprecated on
-    FreeBSD and the files use different formats on different systems.
+    FreeBSD and the files use different formats on different Unix systems.
     
-    3. Don't require Linux-only features such as cgroups.  Using them is
-    fine, but make them optional.
+    3. Don't require Linux-only features such as cgroups or FreeBSD jails.
+    Using them is fine, but make them optional.
     
 2.  Code should build using STOCK tools on any currently supported *nix
     distribution.
     Users should not be required to install a newer compiler in order to build
     the code.  This is a common problem for RHEL-based platforms, which use
-    older tools than the bleeding-edge distributions many developers use.
+    older tools than the bleeding-edge distributions that many developers use.
     It may be tempting to use the latest C++ features, but it's not worth
     the headaches it will cause if users need to run your code on RHEL.
 
@@ -168,14 +177,14 @@ have for software tools, the fewer delays their research will encounter.
 
 Check for every possible error condition.  No exceptions.  This means
 checking the status of every I/O operation, memory allocation, etc.
-If a function returns a status value, the code must check it and take
+If a function returns a status value, the code should check it and take
 appropriate action if it indicates a problem.
 
 ## Testing
 
 1. Test new code frequently.  Do not write more than a few dozen lines of
 code without fully testing the changes.  This way if there is a bug,
-you'll be able to find it easily.
+you'll immediately know where it is.
 
 2. You can facilitate this by investing
 a very small amount of time preparing a test script and a small sample
@@ -191,7 +200,8 @@ design ideal to software development.
 
 1. The simplest solution is always the easiest to maintain and usually the
 fastest, or at least close to it.  Simpler code will have fewer bugs, which
-means end-users also waste less time dealing with problems.
+means end-users also waste less of their time and your time discussing
+problems.
 
 2. Minimize COMPLEXITY, not lines of code.  Writing cryptic, overly clever
 code to make it more compact or meaninglessly faster is just showing off,
@@ -208,7 +218,7 @@ buff_size *= 2;
 ```
 
 3. Don't overoptimize at the expense of simplicity and readability.
-Man-hours usually cost more than CPU-hours (unless the application uses
+Man-hours usually cost more than CPU-hours (except rare applications that use
 massive amounts of CPU time), so minimizing development and maintenance
 time is usually worth more than a 10% reduction in run-time.  Do the math
 before you complicate the code with cleverness that benefits only your ego.
@@ -224,11 +234,10 @@ wheel is generally a smart move.  But not always.
 1. Making your code depend on a huge library (e.g. boost) in order to use
 one or two functions from it may incur more cost than benefit.  It increases
 build/install time and increases that possibility of breakage down the
-road due to API changes in the library.
+road due to API changes and bugs in a massive library.
 
 2. Make sure that any dependencies you add are high quality.  If the only
-existing wheel is an unbalanced limestone slab, then reinventing it would
-be a good move.
+existing wheel is a square limestone slab, it's time to reinvent it.
 
 3. If there are multiple implementations of a dependency (e.g.
 BLAS/OpenBLAS), stick to standards (avoid using extensions supported by
@@ -261,12 +270,12 @@ does not already reveal.
 ```
 
 4. Comments should never state WHAT a piece of code is doing.  This only
-insults the reader's intelligence and doesn't help.  Explain WHY the code is
-doing what it does, i.e. how it serves the purpose and why you chose to do
-it this way.
+insults the reader's intelligence and doesn't aid understanding.  Explain
+WHY the code is doing what it is doing, i.e. how it serves the purpose and
+why you chose to do it this way.
 
 ```
-    buff_size *= 2;     // Double buff_size (incredibly useless)
+    buff_size *= 2;     // Double buff_size (insults the reader's intelligence)
     buff_size *= 2;     // Double to avoid too many realloc()s (helpful)
 ```
 
@@ -276,7 +285,7 @@ Making the meaning of your code obvious is far more important than showing
 off your intricate knowledge of programming.  For example, there's no
 practical benefit to omitting ```== 0``` or similar in a loop or if
 condition.  It saves a few keystrokes, but does not help performance.
-It just makes the reader work a little harder to understand the code.
+It just makes the reader work harder to understand the code.
 
 ```
 char    *p, *name;
