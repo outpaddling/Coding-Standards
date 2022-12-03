@@ -1,8 +1,8 @@
 # Coding-Standards
 
-One of my aims as a bioinformatician with prior training and experience
+One of my aims as a researcher with prior training and experience
 as a software and systems engineer, is to raise the average quality of
-code in the field.  Bioinformatics, and scientific computing in general,
+code in the field.  Scientific computing
 has no shortage of brilliant minds, but a severe shortage of experienced
 and disciplined developers.  As a result, it abounds in code that implements
 ingenious algorithms with low quality code, documentation, and build systems.
@@ -469,11 +469,11 @@ Containers are powerful tools and extremely useful when we need to isolate
 an environment for some reason. For example, they can be used very
 effectively to house numerous virtual web servers on the same hardware in
 complete isolation from each other, providing a high level of security with
-minimal overhead.  They can also be used for testing software in a pristine
+fairly low overhead.  They can also be used for testing software in a pristine
 environment without the need to maintaining separate hardware for testing.
 They largely serve the same purpose as a virtual machine or emulator, but
-with much lower overhead.  The down side is that they are generally limited
-to running an operating system or application highly compatible with the host.
+with much lower overhead.  The main limitation is that they can only run
+an operating system or application highly compatible with the host.
 
 Unfortunately, it seems that every great innovation quickly becomes a solution
 looking for problems and people flock to it like bugs to a lamp, employing it
