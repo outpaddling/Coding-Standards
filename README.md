@@ -344,6 +344,11 @@ physically impossible for unified memory systems to match the RAM
 capacity of external memory, due to simple size limits.  This makes
 limiting memory use even more important for unified memory Macs.
 
+Lastly, if we can minimize memory use to the point where the cache hit
+ratio is very high, then unified memory has minimal benefit, since
+memory beyond the cache is seldom accessed.  We can often make any computer
+perform as well as one with unified memory by minimizing memory use.
+
 ## Documentation
 
 1. Every library function has a man page.  These can be generated from block
