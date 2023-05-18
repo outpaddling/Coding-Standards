@@ -336,6 +336,14 @@ and saving the result to another file does not require the use of arrays.
 (Think about it.)  Using arrays for this task only slows down the program
 and limits the size of the matrices it can process.
 
+Apple's unified memory reduces the cache miss penalty, resulting in a
+smaller performance benefit for reducing memory use.  However, large
+amounts of unified memory are very expensive, so unified memory systems
+tend to have less total RAM than DIMM-based computers.  Also, it is
+physically impossible for unified memory systems to match the RAM
+capacity of external memory, due to simple size limits.  This makes
+limiting memory use even more important for unified memory Macs.
+
 ## Documentation
 
 1. Every library function has a man page.  These can be generated from block
