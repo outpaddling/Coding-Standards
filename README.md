@@ -84,12 +84,13 @@ code block.
 MAKE NO ASSUMPTIONS ABOUT THE HARDWARE THAT WILL RUN YOUR CODE.
 
 Some code designed for big data computations could also be useful on
-a microcontroller and vice-versa.
+a 16-bit microcontroller and vice-versa.
 
 1.  Choose data types according to the needs of the problem.  E.g. In C,
     an integer variable that may contain values beyond the range of a 32-bit
     integer type should be defined as uint64_t or int64_t.  The size
-    of "int", "long", and "size_t" may be smaller than 64 bits on some systems.
+    of "int", "long", and "size_t" vary across CPUs and
+    may be smaller than 64 bits on some systems.
     Some people complain about the variable size of these data types,
     but this feature allows you to write portable code that will
     be optimal on all platforms.  Use int when it doesn't matter if a
@@ -115,7 +116,8 @@ a microcontroller and vice-versa.
 3. If there is a good reason to write hardware-specific code (e.g. to
 increase program speed by using AVX instructions), keep a portable
 implementation alongside the x86-optimized code.  A sub-optimal solution
-for Power, ARM, and RISC-V is better than nothing.
+for Power, ARM, and RISC-V is better than nothing.  Users should never
+have to wait for us to "add support for processor X".
 
 4. Before writing platform-specific code for speed, first see if the
 compiler's optimizer
@@ -150,7 +152,7 @@ All code should run on any POSIX platform and any CPU architecture.
     bash.
     
     2. Parsing files in /proc is not portable.  /proc is deprecated on
-    FreeBSD and the files use different formats on different Unix systems.
+    FreeBSD and the files use different formats on different systems.
     
     3. Don't require Linux-only features such as cgroups or FreeBSD jails.
     Using them is fine, but make them optional.
