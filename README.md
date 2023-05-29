@@ -558,9 +558,9 @@ the programmer to respect class boundaries.  The
 [auto-gen-get-set](https://github.com/outpaddling/auto-dev/tree/main/Scripts)
 script can do most of the work here.
 
-## Just say NO to Creeping Feature Syndrome
+## Creeping Feature Syndrome
 
-Creeping feature syndrome is a situation where good intentions ruin good
+Creeping feature syndrome is a situation where good intentions ruin
 software over time.  Features that aren't all that helpful but seem like a
 good idea gradually add to the complexity of the code and eventually erode
 maintainability and reliability.
@@ -586,5 +586,13 @@ if ( string1 == string2 )
 The latter is a little prettier, but has no objective benefit.  It makes the
 compiler more complex for no good reason.
 
-If your software provides a way to accomplish a task, don't add more features
-just to make the same task a little more intuitive.
+If your software already provides a simple way to accomplish a task,
+then don't add more features just to make the same task a little more
+intuitive.
+
+Also think through the full complexity of what the feature needs to
+accomplish.  For example, is the string comparison above case sensitive?
+How will you provide for both case sensitive and case insensitive
+comparison using built-in operators?  You may realize that it's better
+to just leave this to library functions once you consider how complex
+the problem really is.
