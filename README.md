@@ -154,8 +154,15 @@ All code should run on any POSIX platform and any CPU architecture.
     2. Parsing files in /proc is not portable.  /proc is deprecated on
     FreeBSD and the files use different formats on different systems.
     
-    3. Don't require Linux-only features such as cgroups or FreeBSD jails.
+    3. Don't require Linux-only features such as cgroups or BSD-only
+    features such as FreeBSD jails.
     Using them is fine, but make them optional.
+    
+    4. If no standardized API exists for what you're doing, create one
+    and publish it as a separate, installable library (such as
+    libxtend or biolibc).  Doing this once will
+    prevent countless applications from using redundant #ifdefs
+    in the future.
     
 2.  Code should build using STOCK tools on any currently supported *nix
     distribution.
