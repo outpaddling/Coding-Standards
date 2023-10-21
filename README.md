@@ -20,6 +20,15 @@ projects must follow these guidelines to the maximum extent possible.
 Patches and merge requests that fall short will need to be cleaned up before
 they are incorporated.
 
+## Priorities
+
+General priorities for most of my software are as follows:
+
+1. Reliability/robustness
+2. Clear and concise documentation
+3. Performance
+4. Everything else
+
 ## Rule number 1
 
 Never let quality slip.  Start with a simple, minimalist skeleton of a
@@ -62,7 +71,7 @@ the quality of every aspect of the project.
 
 2. Absolutely no global variables unless there is no alternative.  In my
 decades of programming, the only places I've encountered where global
-variables are unavoidable are interrupt service routines (ISRs) and event
+variables are unavoidable are interrupt service routines (ISRs) and other event
 handlers, i.e. subprograms that are called asynchronously rather than via
 a normal interface.  They have no place in application programming.
 There are other constructs available in modern languages that make modular
@@ -91,11 +100,13 @@ a 16-bit microcontroller and vice-versa.
     integer type should be defined as uint64_t or int64_t.  The size
     of "int", "long", and "size_t" vary across CPUs and
     may be smaller than 64 bits on some systems.
-    Some people complain about the variable size of these data types,
+    Some people complain about the variable size of these data types in C,
     but this feature allows you to write portable code that will
-    be optimal on all platforms.  Use int when it doesn't matter if a
+    perform optimally on all platforms.  Use int when it doesn't matter if a
     variable is 16 bits or 32, and long when it doesn't matter if it's 32
-    or 64.  When it matters, use int64_t, int32_t, etc.
+    or 64.  This will help the compiler avoid multiple precision integer
+    arithmetic, which takes twice as long as a single integer instruction.
+    When size matters due to range requirements, use int64_t, int32_t, etc.
 
 2.  Write endian-independent code
 
@@ -123,8 +134,10 @@ have to wait for us to "add support for processor X".
 compiler's optimizer
 can optimize portable code.  Modern compilers can generate SSE, AVX, Altivec,
 etc. instructions automatically using portable compiler flags like
-```-march-native```.  In some cases this may produce better results than
-hand-written non-portable code.
+```-march-native```.  In some cases this may produce similar or even
+better results than hand-written non-portable code.  Maintaining multiple
+non-portable versions of code is rarely worth the marginal performance
+gain.
 
 2.  OS Portability
 
@@ -132,7 +145,7 @@ POSIX is powerful.  Using strictly POSIX code, we can meet virtually all
 needs.  No need to hinder users by using unnecessary extensions from an
 OS they don't use.
 
-All code should run on any POSIX platform and any CPU architecture.
+All code should run on any POSIX platform (and any CPU architecture).
 
 1. Avoid *nixisms
 
@@ -160,7 +173,7 @@ All code should run on any POSIX platform and any CPU architecture.
     
     4. If no standardized API exists for what you're doing, create one
     and publish it as a separate, installable library (such as
-    libxtend or biolibc).  Doing this once will
+    libxtend, biolibc, libusb, etc).  Doing this once will
     prevent countless applications from using redundant #ifdefs
     in the future.
     
@@ -176,7 +189,8 @@ All code should run on any POSIX platform and any CPU architecture.
 
 Write software accessible to the widest possible audience.  If there are
 relevant standards in the field being served, adhere to them.  Graphical
-programs should run under any desktop environment.  Programs that only
+programs should run under any desktop environment.  GUI systems
+such as Qt make this as simple as possible.  Programs that only
 work well under a certain desktop environment force others to waste time
 duplicating their functionality.  Scientific programs should input and
 output files compatible with related software.  The more choices scientists
@@ -184,7 +198,8 @@ have for software tools, the fewer delays their research will encounter.
 
 ## Robustness
 
-Check for every possible error condition.  No exceptions.  This means
+Check for every possible error condition.  No exceptions (except
+perhaps output to the standard output and standard error).  This means
 checking the status of every I/O operation, memory allocation, etc.
 If a function returns a status value, the code should check it and take
 appropriate action if it indicates a problem.
@@ -193,7 +208,8 @@ appropriate action if it indicates a problem.
 
 1. Test new code frequently.  Do not write more than a few dozen lines of
 code without fully testing the changes.  This way if there is a bug,
-you'll immediately know where it is.
+it will be easy to find.  If you write or change hundreds of lines of new code
+before testing, you'll waste many hours trying to find new bugs.
 
 2. You can facilitate this by investing
 a very small amount of time preparing a test script and a small sample
@@ -213,7 +229,7 @@ means end-users also waste less of their time and your time discussing
 problems.
 
 2. Minimize COMPLEXITY, not lines of code.  Writing cryptic, overly clever
-code to make it more compact or meaninglessly faster is just showing off,
+code to make it more compact or 1% faster is just showing off,
 and makes maintenance harder, not easier.  Readability is as important as
 any other trait.
 
@@ -243,7 +259,7 @@ wheel is generally a smart move.  But not always.
 1. Making your code depend on a huge library (e.g. boost) in order to use
 one or two functions from it may incur more cost than benefit.  It increases
 build/install time and increases that possibility of breakage down the
-road due to API changes and bugs in a massive library.
+road due to API changes and bugs in the library.
 
 2. Make sure that any dependencies you add are high quality.  If the only
 existing wheel is a square limestone slab, it's time to reinvent it.
