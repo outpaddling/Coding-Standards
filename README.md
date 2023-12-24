@@ -110,18 +110,26 @@ a 16-bit microcontroller and vice-versa.
 
 2.  Write endian-independent code
 
-    Use bit operations and masks instead of bit fields.  See
+    Use bit operations and masks instead of bit fields, so that the
+    code behaves the same way on big and little endian CPUs.  See
     https://github.com/outpaddling/Coding-Standards/blob/main/endian.c.
     
-    If saving numeric data in binary format, use something like the
-    C bswap() functions in endian.h as needed.
+    If saving numeric data in binary format, choose an endianness for
+    the file contents and use functions like htole32()
+    [host to little-endian 32-bit] in endian.h as needed.  These
+    functions are not POSIX standardized as of 2023, but they are common and
+    mostly portable.
     
     ```
     #include <endian.h>
     
-    #if BYTE_ORDER == BIG_ENDIAN
-	bswap(num)
-    #endif
+    uint32_t    saved_bits, int_value;
+    
+    ...
+    
+    // Make sure value is written in little-endian format
+    saved_bits = htole32(int_value);
+    fwrite(&saved_bits, sizeof(saved_bits), 1, stream);
     ```
 
 3. If there is a good reason to write hardware-specific code (e.g. to
