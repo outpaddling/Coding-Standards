@@ -149,6 +149,10 @@ gain.
 
 2.  OS Portability
 
+Level the playing field.  Allow users to choose their OS based on
+its technical merits, such as reliability and performance, rather than
+force them to use an OS supported by your software.
+
 POSIX is powerful.  Using strictly POSIX code, we can meet virtually all
 needs.  No need to hinder users by using unnecessary extensions from an
 OS they don't use.
@@ -177,7 +181,7 @@ All code should run on any POSIX platform (and any CPU architecture).
     
     3. Don't require Linux-only features such as cgroups or BSD-only
     features such as FreeBSD jails.
-    Using them is fine, but make them optional.
+    Supporting them is fine, but make them optional.
     
     4. If no standardized API exists for what you're doing, create one
     and publish it as a separate, installable library (such as
