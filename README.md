@@ -360,26 +360,47 @@ often an approach that uses scalar operations instead.
 
 ## Memory use
 
-*Always* try to minimize memory use.  Using more memory rarely speeds up
-a program and more often slows it down.  Programs that use less memory have
-a better cache hit ratio and hence far fewer memory wait cycles.  Cache
-access is an order of magnitude faster than DRAM access.  Occasionally
-it is advantageous to bring large amounts of data into memory (e.g. sorting,
-hash tables), but work hard to find alternatives.  As an example, adding two
-matrices stored in files
-and saving the result to another file does not require the use of arrays.
-(Think about it.)  Using arrays for this task only slows down the program
-and limits the size of the matrices it can process.
+*Always* try to minimize memory use.
+
+1. Using more memory rarely speeds up
+    a program and more often slows it down.  Programs that use less memory have
+    a better cache hit ratio and hence far better average memory response
+    times.  Cache access is an order of magnitude faster than DRAM access.
+    Suppose cache access time is 3 nanoseconds and DRAM access takes 30
+    nanoseconds.  If data are found in the cache 90% of the time, then our
+    average memory access time is 3 ns * .9 + 30 ns * .1 = 5.7 ns.  A slight
+    drop in the hit ratio to 80% give us 3 ns * .8 + 30 ns * .2 = 8.4 ns.
+    That's a 47% increase in run time.  
+    
+    Occasionally
+    it is advantageous to bring large amounts of data into memory (e.g. sorting,
+    hash tables), but usually not.  As an example, adding two
+    matrices stored in files
+    and saving the result to another file does not require the use of arrays.
+    (Think about it.)  Using arrays for this task only slows down the program
+    and limits the size of the matrices it can process efficiently to the
+    computer's RAM capacity (swap is not efficient here).
+
+2. Higher memory use increases the likelihood that the program will not
+be able to run at all.  It's foolish to assume that every computer
+running our program has as much RAM as our development machine, or that
+all RAM is available on today's multitasking systems.  Some computers
+have far less RAM in total, and some will be running other programs
+that occupy a large portion of it.  If our program can't run because
+there is not enough memory available, this might mean that CPUs sit
+idle while a more memory-efficient program could be utilizing them.
+
+### Apple Unified Memory
 
 Apple's unified memory reduces the cache miss penalty, resulting in a
 smaller performance benefit for reducing memory use.  However, large
 amounts of unified memory are very expensive, so unified memory systems
 tend to have less total RAM than DIMM-based computers.  Also, it is
 physically impossible for unified memory systems to match the RAM
-capacity of external memory, due to simple size limits.  This makes
+capacity of external memory, due to physical size limits.  This makes
 limiting memory use even more important for unified memory Macs.
 
-Lastly, if we can minimize memory use to the point where the cache hit
+Lastly, if we minimize memory use to the point where the cache hit
 ratio is very high, then unified memory has minimal benefit, since
 memory beyond the cache is seldom accessed.  We can often make any computer
 perform as well as one with unified memory by minimizing memory use.
