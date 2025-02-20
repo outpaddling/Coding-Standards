@@ -228,6 +228,22 @@ a very small amount of time preparing a test script and a small sample
 input that triggers all program features and can be processed in seconds
 or minutes.
 
+3.  Test on multiple platforms, using different compilers/interpreters,
+    even if you don't intend to fully support them all.  This will help you
+    identify bugs before end-users do.
+    
+    Each compiler will issue warnings about potential problems that other
+    compilers overlook.  Many real bugs are discovered by simply building
+    with another compiler or newer version of the same compiler.
+    
+    Different compilers, libraries, and operating systems organize memory
+    differently.  The fact that a program seems to work fine with one
+    setup does not mean it is free of bugs.  A stray pointer or subscript
+    might have no visible impact, because the memory it corrupts will
+    be updated will not be referenced while it contains corrupted data.
+    On another system, such corruption could cause a segmentation fault,
+    or worse, invalid output.
+
 ## RUSC (Reduced Unnecessary Software Complexity)
 
 Simplicity is the ultimate sophistication.
@@ -616,7 +632,8 @@ script can do most of the work here.
 
 ## Creeping Feature Syndrome
 
-Creeping feature syndrome is a situation where good intentions ruin
+Creeping feature syndrome (A.K.A. "feature creep")
+is a situation where good intentions ruin
 software over time.  Features that aren't all that helpful but seem like a
 good idea gradually add to the complexity of the code and eventually erode
 maintainability and reliability.
