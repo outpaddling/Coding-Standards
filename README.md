@@ -458,8 +458,15 @@ for detailed info on standard/common variables.
     but they are cans of worms.  Most of them end up becoming extremely complex
     in the attempt to make them work in various environments and almost invariably
     fail to achieve this goal.  When they don't work (which is often)
-    it's a nightmare for the end user.  They'd have an easier time with a simple
-    Makefile.
+    it's a nightmare for the end user to figure out why the configure
+    tool generated a non-functional Makefile, Ninja-file, etc.
+    They'd have an easier time debugging a simple Makefile.  This
+    falls under the famous David Wheeler quip, sometimes called the
+    "Fundamental theorom of software engineering":
+    
+    "We can solve any problem by adding another level of indirection".
+    
+    Corrolary: "...except the problem of too many levels of indirection."
     
     Respecting these variables means two things:
     
