@@ -459,6 +459,15 @@ to describe in the man page format:
     full manual in a more appropriate format.  Don't make users waste time
     searching for documentation.
 
+Some people might argue that "man" is a bad format for documentation.
+This is a bogus generalization.  Man pages are certainly not suitable
+for complex programs.  As an example, try finding the information you
+need in "man bash" or "man tcsh".  However, man pages are very convenient
+for simple programs and library functions (which are always simple if
+you're writing cohesive code).  If a program is complex, it should have
+a man page anyway, but the man page can simply point the user to detailed
+documentation in a more navigable format such as HTML.
+
 ## Build system
 
 Write a simple build system that's easy to follow and portable.
