@@ -379,23 +379,38 @@ often an approach that uses scalar operations instead.
 *Always* try to minimize memory use.
 
 1. Using more memory rarely speeds up
-    a program and more often slows it down.  Programs that use less memory have
-    a better cache hit ratio and hence far better average memory response
+    a program and more often slows it down.  Programs that use less memory
+    have a better cache hit ratio, and hence far better average memory response
     times.  Cache access is an order of magnitude faster than DRAM access.
     Suppose cache access time is 3 nanoseconds and DRAM access takes 30
     nanoseconds.  If data are found in the cache 90% of the time, then our
     average memory access time is 3 ns * .9 + 30 ns * .1 = 5.7 ns.  A slight
     drop in the hit ratio to 80% give us 3 ns * .8 + 30 ns * .2 = 8.4 ns.
-    That's a 47% increase in run time.  
+    That's a 47% increase in memory access time, which is often a
+    significant portion of total run time.
+    
+    One of the most common mistakes among programmers is using arrays
+    where they are not needed, simply because it is intuitive.  Many
+    programmers, upon seeing the words "list of ..." in the specification,
+    immediately think of an array, vector, or similar data structure,
+    and code their program to inhale all the data into memory before
+    processing it.  A *streaming* data processing design is far better
+    choice when it is feasible.  I.e. read one input value into a
+    *scalar* variable, process it, output the results.
     
     Occasionally
-    it is advantageous to bring large amounts of data into memory (e.g. sorting,
-    hash tables), but usually not.  As an example, adding two
+    it is advantageous to bring large amounts of data into memory (e.g.
+    sorting, hash tables), but usually not.  As an example, adding two
     matrices stored in files
     and saving the result to another file does not require the use of arrays.
-    (Think about it.)  Using arrays for this task only slows down the program
+    This can easily be done using a streaming design.
+    (Think about it.)  Using arrays for this task only slows down the program,
     and limits the size of the matrices it can process efficiently to the
-    computer's RAM capacity (swap is not efficient here).
+    computer's RAM capacity (swap is not efficient here).  Also, the
+    virtual memory size (RAM + swap) is an absolute limit on the matrix size.
+    If we use a streaming design instead,
+    the only limit on matrix size is the amount of disk space,
+    generally many times larger than RAM and swap.
 
 2. Higher memory use increases the likelihood that the program will not
 be able to run at all.  It's foolish to assume that every computer
