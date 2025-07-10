@@ -1,5 +1,35 @@
 # Coding-Standards
 
+This repository describes the coding standards for projects under
+Github accounts "outpaddling" and "auerlab".  All contributions to these
+projects must follow these guidelines to the maximum extent possible.
+Patches and merge requests that fall short will need to be cleaned up before
+they are incorporated.
+
+## Core principle
+
+Software is inherently expensive.  It takes years of training and practice
+to become a proficient programmer.  Very few people ever really master
+the art of software engineering.
+
+The high cost of software development makes it imperative that the
+code we write be made as widely usable and accessible as possible.
+Every time we write new code, we should attempt to make it as widely
+available as possible, so that the time and effort invested in its
+creation need not be duplicated.   This is the core principle behind
+the specifics that follow.
+
+To achieve this primary goal, we need to make our software reliable and
+portable
+across as many hardware platforms as possible.  Portability is a function
+of language selection, CPU efficiency, memory efficiency, etc.
+For basic system code (e.g. a string or math function), this could mean
+aiming to serve every platform from the smallest microcontroller to the
+largest HPC cluster.  Other software will have a narrower range of
+feasible platforms, but should still be as broad as possible.
+
+## Software in science
+
 One of my aims as a researcher with prior training and experience
 as a software and systems engineer, is to raise the average quality of
 code in the field.  Scientific computing
@@ -13,12 +43,6 @@ research as researchers struggle to install, learn, and use them.  A
 core goal of all my projects is software that is easy to install on any
 POSIX platform, well-documented, easy to use, reliable, and highly CPU
 and memory efficient.
-
-This repository describes the coding standards for projects under
-Github accounts "outpaddling" and "auerlab".  All contributions to these
-projects must follow these guidelines to the maximum extent possible.
-Patches and merge requests that fall short will need to be cleaned up before
-they are incorporated.
 
 ## Priorities
 
