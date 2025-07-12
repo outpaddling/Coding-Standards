@@ -8,12 +8,12 @@ they are incorporated.
 
 ## Core principle
 
-Software is inherently expensive.  It takes years of training and practice
-to become a proficient programmer.  Very few people ever really master
-the art of software engineering.
+Software development is inherently expensive.  It takes years of training and
+practice to become a proficient programmer.  Very few people ever really
+master the art of software engineering.
 
 The high cost of software development makes it imperative that the
-code we write be made as widely usable and accessible as possible.
+code we write be made as reusable as possible.
 Every time we write new code, we should attempt to make it as widely
 available as possible, so that the time and effort invested in its
 creation need not be duplicated.   This is the core principle behind
@@ -24,7 +24,7 @@ portable
 across as many hardware platforms as possible.  Portability is a function
 of language selection, CPU efficiency, memory efficiency, etc.
 For basic system code (e.g. a string or math function), this could mean
-aiming to serve every platform from the smallest microcontroller to the
+serving any platform from the smallest microcontroller to the
 largest HPC cluster.  Other software will have a narrower range of
 feasible platforms, but should still be as broad as possible.
 
@@ -599,8 +599,10 @@ mainstream package managers:
 4. Make the build-system package-friendly.  If it's trivial to create a
 Debian package, a FreeBSD port, a MacPort, a pkgsrc packages, etc., then
 we'll more likely get free help from packager maintainers, so we can stay
-out of the software management business and focus on
-development.  This can be achieved very simply with a clean Makefile that
+out of the software management business and focus on development.
+Users won't have any trouble deploying the software, and we won't have
+to waste time helping them with deployment issues.
+This can be achieved very simply with a clean Makefile that
 respects standard build variables such as CC, CFLAGS, LDFLAGS, etc., which
 most package managers already provide as environment variables or via the
 make command.
@@ -610,8 +612,9 @@ make command.
 Containers are powerful tools and extremely useful when we need to isolate
 an environment for some reason. For example, they can be used very
 effectively to house numerous virtual web servers on the same hardware in
-complete isolation from each other, providing a high level of security with
-fairly low overhead.  They can also be used for testing software in a pristine
+complete isolation from each other, providing a high level of security
+and hardware utilization with
+low overhead.  They can also be used for testing software in a pristine
 environment without the need to maintaining separate hardware for testing.
 They largely serve the same purpose as a virtual machine or emulator, but
 with much lower overhead.  The main limitation is that they can only run
