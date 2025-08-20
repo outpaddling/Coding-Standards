@@ -496,25 +496,11 @@ documentation in a more navigable format such as HTML.
 
 Write a simple build system that's easy to follow and portable.
 
-1. A simple Makefile that respects standard build variables such as CC,
-CXX, CFLAGS, CXXFLAGS, LDFLAGS, INSTALL, etc. is sufficient for most projects
-and easier to debug than more sophisticated build systems.  See
-https://github.com/outpaddling/Coding-Standards/blob/main/makevars.md
-for detailed info on standard/common variables.
-
-    Configure tools like GNU autoconf and cmake may seem to make things easier,
-    but they are cans of worms.  Most of them end up becoming extremely complex
-    in the attempt to make them work in various environments and almost invariably
-    fail to achieve this goal.  When they don't work (which is often)
-    it's a nightmare for the end user to figure out why the configure
-    tool generated a non-functional Makefile, Ninja-file, etc.
-    They'd have an easier time debugging a simple Makefile.  This
-    falls under the famous David Wheeler quip, sometimes called the
-    "Fundamental theorom of software engineering":
-    
-    "We can solve any problem by adding another level of indirection".
-    
-    Corrolary: "...except the problem of too many levels of indirection."
+1.  A simple Makefile that respects standard build variables such as CC,
+    CXX, CFLAGS, CXXFLAGS, LDFLAGS, INSTALL, etc. is sufficient for most projects
+    and easier to debug than more sophisticated build systems.  See
+    https://github.com/outpaddling/Coding-Standards/blob/main/makevars.md
+    for detailed info on standard/common variables.
     
     Respecting these variables means two things:
     
@@ -571,6 +557,37 @@ for detailed info on standard/common variables.
     ```
     cc -O2 -pipe -Wall prog.c -o prog
     ```
+
+    Configure tools like GNU autoconf and cmake aim to make things easier,
+    but they are cans of worms.  Most of them end up becoming extremely
+    complex in the attempt to make them work in various environments,
+    and almost invariably fail to achieve this goal.
+    When they don't work (which is often)
+    it's a nightmare for the end user to figure out why the configure
+    tool aborted or generated a non-functional Makefile, Ninja-file, etc.
+    They'd have a much easier time debugging a simple Makefile.  This
+    falls under the famous David Wheeler quip, sometimes called the
+    "Fundamental theorom of software engineering":
+    
+    "We can solve any problem by adding another level of indirection".
+    
+    Corrolary: "...except the problem of too many levels of indirection."
+    
+    A few of the problems often caused by configure tools:
+    
+    -   They often alter the build depending on what other software
+	is discovered at configure-time.  This leads to inconsistent
+	installations, causing confusion and failures for end-users
+	and package manager maintainers.
+    -   They often detect the CPU-type and add non-portable optimizations.
+	Hence, building on a high-end machine may produce binaries
+	that don't work on lesser machines.
+    -   Some actually attempt to download and install dependencies,
+	which is the job of a package manager, not the build system
+	of a particular software project.  This actually makes it very
+	difficult to create packages for package managers such as
+	Debian packages, FreeBSD ports, MacPorts, etc., which would
+	free users from having to build the software at all.
 
 2. Use portable commands.  E.g., there is generally no reason to set
 CC to "gcc", since "cc" and "gcc" are the same on GNU-based systems such
@@ -637,9 +654,10 @@ In the case of containers, they are often used to cover up inadequacies in
 software design rather than correct them.  E.g., they can be used as a
 mechanism to bundle outdated, buggy libraries without causing conflicts with
 other versions, since they are isolated from each other.  Sweeping problems
-into a container rather than correcting them with proper code maintenance
-only allows problems to accumulate.  It is clearly not a sustainable approach
-to software development and deployment.
+into a container is a prime example of "sweeping problems under the rug".
+It's a poor alternative to correcting them with proper code maintenance, and
+only enables more problems to accumulate.  It is clearly not a sustainable
+approach to software development and deployment.
 
 Use containers where they have a legitimate benefit, but never to isolate
 quality issues from the host system.
