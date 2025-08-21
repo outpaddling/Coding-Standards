@@ -323,6 +323,13 @@ for your code.  This will increase the odds of a successful deployment
 for all of your users, since any one implementation could have critical
 bugs at a given time.
 
+4. The program should build with the native compilers and tools on
+any fully supported operating system (including RHEL, which uses older
+compilers, libraries, and kernels).  Don't make end-users struggle
+with installing massive dependencies like newer GCC compilers just so
+you can play with the latest new language features.  They are never
+necessary and rarely reduce code size significantly.
+
 ## Readability
 
 1. All code is consistently indented with blank lines separating code blocks.
