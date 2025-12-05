@@ -4,16 +4,16 @@ This repository describes the coding standards for projects under
 Github accounts "outpaddling" and "auerlab".  All contributions to these
 projects must follow these guidelines to the maximum extent possible.
 Patches and merge requests that fall short will need to be cleaned up before
-they are incorporated.
+they are accepted.
 
 ## Core principle
 
 Software development is inherently expensive.  It takes years of training and
-practice to become a proficient programmer.  Very few people ever really
-master the art of software engineering.
+practice just to become a proficient programmer, and very few people ever
+really master the art of software engineering.
 
 The high cost of software development makes it imperative that the
-code we write be made as reusable as possible.
+code we write be made as accessible and reusable as possible.
 Every time we write new code, we should attempt to make it as widely
 available as possible, so that the time and effort invested in its
 creation need not be duplicated.   This is the core principle behind
@@ -22,11 +22,12 @@ the specifics that follow.
 To achieve this primary goal, we need to make our software reliable and
 portable
 across as many hardware platforms as possible.  Portability is a function
-of language selection, CPU efficiency, memory efficiency, etc.
+of language selection, CPU efficiency, memory efficiency, choice of features
+(POSIX vs extensions), etc.
 For basic system code (e.g. a string or math function), this could mean
 serving any platform from the smallest microcontroller to the
 largest HPC cluster.  Other software will have a narrower range of
-feasible platforms, but should still be as broad as possible.
+feasible platforms, but should still be as broadly usable as possible.
 
 ## Software in science
 
@@ -55,7 +56,8 @@ General priorities for most of my software are as follows:
 
 ## Rule number 1
 
-Never let quality slip.  Start with a simple, minimalist skeleton of a
+Never let quality slip during development.
+Start with a simple, minimalist skeleton of a
 program and make the code and build system impeccable.
 
 Then add only useful features, with great care to maintain or improve
@@ -63,11 +65,11 @@ the quality of every aspect of the project.
 
 ## Modularity
 
-1.  Always try to write code that can be used anywhere rather than just
-    in this project.
+1.  Try to make every piece of code you write usable anywhere rather than
+    just in this project.
 
-    Any function that might be useful to another program should be placed
-    in a library such as
+    Any function that might be useful to another program should be
+    generalized as much as possible and placed in a library such as
     [libxtend](https://github.com/outpaddling/libxtend) or
     [biolibc](https://github.com/outpaddling/biolibc), rather than reside in
     an application.  For a typical C project, about 2/3 to 3/4 of all the
@@ -78,13 +80,16 @@ the quality of every aspect of the project.
     the API design, while at the same time designing the code for more
     general use.
     To achieve this, first develop each new function as part of the
-    application it will serve, but design it to be independent of the program
-    so that it can be easily factored out to a library after it has been
-    fully tested.
+    application it will serve, but design it AND DOCUMENT IT
+    to be independent of the program so that it can be easily factored
+    out and moved to a library after it has been fully tested.
     
-    For example, the libxtend strupper() function was developed as part of
+    For example, the libxtend strupper() function (which alters a string by
+    converting lower case characters to upper case) was developed as part of
     fastq-trim, which must use case-insensitive comparison for DNA/RNA
-    sequences.  Fastq-trim also uses a
+    sequences.  Using strcasecmp() would be inefficient here, since it
+    would essentially convert the adapter sequence every time it is
+    compared to a segment of a read.  Fastq-trim also uses a
     string comparison method that tolerates a few differences due to
     DNA sequencing read errors, hence strcasecmp() will not work.  The
     adapter sequence to be compared to all reads is converted to upper case
@@ -97,20 +102,22 @@ the quality of every aspect of the project.
 decades of programming, the only places I've encountered where global
 variables are unavoidable are interrupt service routines (ISRs) and other event
 handlers, i.e. subprograms that are called asynchronously rather than via
-a normal interface.  They have no place in application programming.
+a normal interface.  They have no place in vanilla application programming.
 There are other constructs available in modern languages that make modular
 programming convenient and efficient.  The notion that using global
 variables will greatly speed up a program by reducing function call overhead
 is a myth.  Well-designed functions have low overhead that will not be
-noticeable in most cases.
+noticeable in most cases.  The cost of a function call in C is negligible,
+except in extreme cases where the function only executes a few machine
+instructions and is called billions of times.
 
 3. Write cohesive code, i.e. keep related code together. Each subprogram
 should serve exactly one purpose and each purpose should be served by
 exactly one subprogram.  Initialize loop variables in or immediately
 before the loop, not where it is out-of-sight such as in the variable
 definition at the start of a larger block.  The reader should not have
-to jump around the program to find all the information needed to understand a
-code block.
+to waste time and focus scrolling back looking for the information needed to
+understand a code block.
 
 ## Hardware Portability
 
@@ -324,7 +331,7 @@ for all of your users, since any one implementation could have critical
 bugs at a given time.
 
 4. The program should build with the native compilers and tools on
-any fully supported operating system (including RHEL, which uses older
+any activelu maintained operating system (including RHEL, which uses older
 compilers, libraries, and kernels).  Don't make end-users struggle
 with installing massive dependencies like newer GCC compilers just so
 you can play with the latest new language features.  They are never
